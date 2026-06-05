@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aakriti Barat — Skills &amp; Identity Map</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #f8fafc; font-family: 'Inter', system-ui, sans-serif; overflow: hidden; width: 100vw; height: 100vh; }
+
+    #header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+      background: rgba(248,250,252,0.96); backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0.65rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
+    }
+    #header h1 { font-size: 0.875rem; font-weight: 700; color: #0f172a; letter-spacing: -0.01em; }
+    #header h1 span { color: #1d4ed8; }
+    #header p { font-size: 0.68rem; color: #94a3b8; margin-top: 0.1rem; }
+
+    #filters {
+      display: flex; gap: 0.4rem; flex-wrap: wrap;
+    }
+    .filter-btn {
+      font-size: 0.68rem; font-weight: 600; padding: 0.25rem 0.65rem;
+      border-radius: 100px; border: 1px solid; cursor: pointer;
+      transition: all 0.15s; background: transparent; font-family: inherit;
+    }
+    .filter-btn.active { color: #fff !important; }
+    .filter-btn[data-cat="all"]        { border-color:#94a3b8; color:#475569; }
+    .filter-btn[data-cat="all"].active { background:#475569; }
+    .filter-btn[data-cat="identity"]   { border-color:#d97706; color:#d97706; }
+    .filter-btn[data-cat="identity"].active { background:#d97706; }
+    .filter-btn[data-cat="security"]   { border-color:#1d4ed8; color:#1d4ed8; }
+    .filter-btn[data-cat="security"].active { background:#1d4ed8; }
+    .filter-btn[data-cat="hardware"]   { border-color:#047857; color:#047857; }
+    .filter-btn[data-cat="hardware"].active { background:#047857; }
+    .filter-btn[data-cat="human"]      { border-color:#7c3aed; color:#7c3aed; }
+    .filter-btn[data-cat="human"].active { background:#7c3aed; }
+    .filter-btn[data-cat="creative"]   { border-color:#db2777; color:#db2777; }
+    .filter-btn[data-cat="creative"].active { background:#db2777; }
+    .filter-btn[data-cat="data"]       { border-color:#0891b2; color:#0891b2; }
+    .filter-btn[data-cat="data"].active { background:#0891b2; }
+    .filter-btn[data-cat="industry"]   { border-color:#b45309; color:#b45309; }
+    .filter-btn[data-cat="industry"].active { background:#b45309; }
+    .filter-btn[data-cat="emerging"]   { border-color:#be123c; color:#be123c; }
+    .filter-btn[data-cat="emerging"].active { background:#be123c; }
+    .filter-btn[data-cat="experience"] { border-color:#475569; color:#475569; }
+    .filter-btn[data-cat="experience"].active { background:#475569; }
+
+    /* transferable ring highlight */
+    .transferable-ring { stroke-dasharray: 4 2; animation: dash 8s linear infinite; }
+    @keyframes dash { to { stroke-dashoffset: -60; } }
+
+    #legend {
+      position: fixed; bottom: 1rem; left: 1.25rem; z-index: 20;
+      background: rgba(255,255,255,0.96); border: 1px solid #e2e8f0;
+      border-radius: 10px; padding: 0.75rem 1rem; max-height: calc(100vh - 120px); overflow-y: auto;
+    }
+    .legend-section { margin-bottom: 0.6rem; }
+    .legend-title { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 0.4rem; }
+    .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.68rem; color: #475569; margin-bottom: 0.25rem; }
+    .legend-item:last-child { margin-bottom: 0; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .legend-transfer { display: flex; align-items: center; gap: 0.5rem; font-size: 0.68rem; color: #7c3aed; margin-top: 0.4rem; }
+    .legend-dash { width: 20px; height: 0; border-top: 2px dashed #7c3aed; flex-shrink: 0; }
+
+    #arc-label {
+      position: fixed; bottom: 1rem; right: 1.25rem; z-index: 20;
+      background: rgba(255,255,255,0.96); border: 1px solid #e2e8f0;
+      border-radius: 10px; padding: 0.75rem 1rem; max-width: 200px;
+    }
+    .arc-title { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 0.4rem; }
+    .arc-row { display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; color: #334155; margin-bottom: 0.2rem; }
+    .arc-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .arc-hint { font-size: 0.65rem; color: #94a3b8; margin-top: 0.5rem; line-height: 1.5; }
+
+    #tooltip {
+      position: fixed; z-index: 30;
+      background: #ffffff; border: 1px solid #e2e8f0;
+      border-radius: 10px; padding: 0.85rem 1.1rem;
+      max-width: 250px; pointer-events: none;
+      opacity: 0; transition: opacity 0.15s;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+    .t-label { font-weight: 700; font-size: 0.825rem; color: #0f172a; margin-bottom: 0.3rem; line-height: 1.3; }
+    .t-cat { font-size: 0.63rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+    .t-transfer { font-size: 0.68rem; background: #f5f3ff; color: #7c3aed; padding: 0.2rem 0.5rem; border-radius: 4px; margin-bottom: 0.4rem; font-weight: 600; display: inline-block; }
+    .t-desc { font-size: 0.775rem; color: #475569; line-height: 1.6; }
+
+    svg { display: block; }
+    .node { cursor: grab; }
+    .node:active { cursor: grabbing; }
+  </style>
+</head>
+<body>
+
+<div id="header">
+  <div>
+    <h1>Aakriti <span>Barat</span> — Skills &amp; Identity Map</h1>
+    <p>Drag · Hover · Filter by category</p>
+  </div>
+  <div id="filters">
+    <button class="filter-btn active" data-cat="all">All</button>
+    <button class="filter-btn" data-cat="identity">Identity</button>
+    <button class="filter-btn" data-cat="security">Security</button>
+    <button class="filter-btn" data-cat="hardware">Hardware</button>
+    <button class="filter-btn" data-cat="industry">Industry</button>
+    <button class="filter-btn" data-cat="emerging">Emerging</button>
+    <button class="filter-btn" data-cat="data">Data</button>
+    <button class="filter-btn" data-cat="human">Human</button>
+    <button class="filter-btn" data-cat="creative">Creative</button>
+    <button class="filter-btn" data-cat="experience">Experience</button>
+  </div>
+</div>
+
+<div id="legend">
+  <div class="legend-section">
+    <div class="legend-title">Categories</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div>Identity &amp; Mindset</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1d4ed8"></div>Hardware Security</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#047857"></div>Hardware &amp; FPGA</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#b45309"></div>Industry Engineering</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#be123c"></div>Emerging / In-Demand</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>Human Skills</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#db2777"></div>Creative &amp; Cognitive</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#0891b2"></div>Data &amp; Modeling</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#475569"></div>Experience</div>
+  </div>
+  <div class="legend-transfer">
+    <div class="legend-dash"></div>
+    Dashed ring = transferable skill
+  </div>
+</div>
+
+<div id="arc-label">
+  <div class="arc-title">Career Arc</div>
+  <div class="arc-row"><div class="arc-dot" style="background:#047857"></div>Industry (2014–2020)</div>
+  <div class="arc-row"><div class="arc-dot" style="background:#1d4ed8"></div>Research PhD (2020–2026)</div>
+  <div class="arc-row"><div class="arc-dot" style="background:#b45309"></div>Industry (2026→)</div>
+  <div class="arc-hint">Dashed-ring nodes = skills that cross all three contexts</div>
+</div>
+
+<div id="tooltip">
+  <div class="t-label"></div>
+  <div class="t-cat"></div>
+  <div class="t-desc"></div>
+</div>
+
+<svg id="graph"></svg>
+
+<script>
+window.addEventListener('load', function() {
+  if (typeof d3 === 'undefined') {
+    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#64748b;font-size:0.9rem;text-align:center;padding:2rem;"><p>⚠️ Requires internet connection (D3.js CDN). Works on GitHub Pages.</p></div>';
+    return;
+  }
+  initGraph();
+});
+
+function initGraph() {
+  const COLORS = {
+    identity:   '#d97706',
+    security:   '#1d4ed8',
+    hardware:   '#047857',
+    industry:   '#b45309',
+    emerging:   '#be123c',
+    human:      '#7c3aed',
+    creative:   '#db2777',
+    data:       '#0891b2',
+    experience: '#475569'
+  };
+
+  const CAT_LABELS = {
+    identity:   'Identity & Mindset',
+    security:   'Hardware Security',
+    hardware:   'Hardware & FPGA',
+    industry:   'Industry Engineering',
+    emerging:   'Emerging / In-Demand',
+    human:      'Human Skills',
+    creative:   'Creative & Cognitive',
+    data:       'Data & Modeling',
+    experience: 'Experience'
+  };
+
+  // transferable: true = dashed ring = skill that bridges industry↔research contexts
+  const nodes = [
+    // IDENTITY
+    { id:'aakriti',          label:'Aakriti Barat',              cat:'identity',   r:32, transferable:false, desc:'Hardware Security Researcher. PhD Candidate in Electrical Engineering. Scientist, engineer, teacher, and maker — depending on what the problem needs.' },
+    { id:'sees-it-through',  label:'Sees It Through',            cat:'identity',   r:26, transferable:false, desc:'Picked up abstract painting → gallery shows → town-recognized artist. Picked up hardware security → 3 published papers. Doesn\'t do things halfway. Ever.' },
+    { id:'physics-bridge',   label:'Physics → Security Bridge',  cat:'identity',   r:24, transferable:false, desc:'Translates device-level physics into deployable security primitives. Models what happens at the silicon boundary — then asks what it means for trust.' },
+    { id:'parallel-thinker', label:'Parallel Thinker',           cat:'identity',   r:20, transferable:false, desc:'Maps the problem space AND gathers data simultaneously. Doesn\'t wait for a complete picture before acting — works both tracks at once.' },
+    { id:'adapts',           label:'Adapts Under Pressure',      cat:'identity',   r:20, transferable:false, desc:'Turned a career setback into 4+ years of frontier research in an emerging field. The pivot wasn\'t planned — the follow-through was.' },
+
+    // HUMAN SKILLS
+    { id:'translator',       label:'Complexity Translator',      cat:'human',      r:22, transferable:true,  desc:'What students and mentees say: "she makes hard things feel approachable." First honed writing technical documentation at Vertiv; deepened through teaching 50+ students and peer-reviewed publishing.' },
+    { id:'published',        label:'3 IEEE/ACM Publications',    cat:'human',      r:20, transferable:false, desc:'First-author IEEE papers on PUF authentication and trap kinetics. ACM paper on hardware fault detection.' },
+    { id:'reviewer',         label:'Peer Reviewer — IEEE & ACM', cat:'human',      r:15, transferable:false, desc:'Active reviewer for hardware security, VLSI design, and cryptographic engineering.' },
+    { id:'speaker',          label:'Conference Speaker',         cat:'human',      r:15, transferable:false, desc:'Presenting at 2 conferences in 2026. Presented at IEEE MWSCAS 2025.' },
+    { id:'teacher',          label:'Curriculum Designer',        cat:'human',      r:18, transferable:false, desc:'Built hardware security and embedded systems labs for 50+ students. 100% pass rate in cybersecurity. 95% project completion in embedded systems.' },
+    { id:'xfunc-lead',       label:'Cross-Functional Leadership',cat:'human',      r:17, transferable:true,  desc:'Led cross-functional teams of 10+ at Vertiv. Coordinated 7+ researchers for PhD workshop. Managed $15K in departmental funding. Used in both industry and research contexts.' },
+    { id:'tech-writing',     label:'Technical Writing & Standards', cat:'human',   r:16, transferable:true,  desc:'Authored global testing protocols at Vertiv. Wrote IEEE/ACM papers. Produced requirements documentation and risk analyses. Standards used: IPC, IEEE, ISO-aligned ECN workflows.' },
+
+    // CREATIVE
+    { id:'art',              label:'Abstract Painting',          cat:'creative',   r:22, transferable:false, desc:'Town-recognized artist. Featured in multiple local gallery exhibitions. "Flux" series explores chaos, resilience, and contrast. Doesn\'t pick things up halfway.' },
+    { id:'music',            label:'Music',                      cat:'creative',   r:15, transferable:false, desc:'Musical sensibility that trains ear for structure within complexity — timing, harmony, and the relationship between parts.' },
+    { id:'visual-patterns',  label:'Visual Pattern Recognition', cat:'creative',   r:20, transferable:true,  desc:'Turns years of simulation data into one figure someone can actually understand. Same cognitive skill used in abstract art, data pipeline design, and PCB layout review.' },
+
+    // HARDWARE SECURITY
+    { id:'puf',              label:'PUF / IC Authentication',    cat:'security',   r:24, transferable:false, desc:'Physically Unclonable Functions — silicon fingerprints for chip authentication. Published first-author IEEE paper. Architecture uses THD in CMOS inverters as entropy source.' },
+    { id:'root-of-trust',    label:'Root of Trust',              cat:'security',   r:20, transferable:false, desc:'Hardware root-of-trust architectures for industrial control systems and embedded platforms.' },
+    { id:'supply-chain',     label:'Supply Chain Security',      cat:'security',   r:18, transferable:true,  desc:'IC anti-counterfeiting and trusted hardware verification — research side. Vendor qualification and component traceability — industry side (Vertiv, Thermo Fisher). Same problem, two perspectives.' },
+    { id:'side-channel',     label:'Side-Channel Analysis',      cat:'security',   r:15, transferable:false, desc:'Physical attack and defense methodology. Power analysis, fault injection, adversarial reasoning at hardware level.' },
+    { id:'trap-kinetics',    label:'Trap Kinetics & CTS',        cat:'security',   r:20, transferable:false, desc:'Current Transient Spectroscopy for on-chip authentication and aging diagnostics. Published first-author IEEE paper.' },
+    { id:'fault-injection',  label:'Fault Injection',            cat:'security',   r:14, transferable:false, desc:'Evaluating hardware security under fault and edge-case operating conditions.' },
+    { id:'jtag',             label:'JTAG Security',              cat:'security',   r:13, transferable:true,  desc:'JTAG used for hardware debugging in industry (Vertiv validation, OsteoDx) and as a security attack surface in hardware security research.' },
+
+    // HARDWARE & FPGA
+    { id:'tcad',             label:'TCAD / HSPICE',              cat:'hardware',   r:22, transferable:false, desc:'Device-level security characterization. Circuit and device simulation for validating PUF architectures and silicon-born signatures.' },
+    { id:'device-physics',   label:'Device Physics',             cat:'hardware',   r:20, transferable:false, desc:'Modeling process variation, defect signatures, and trap-driven device behavior. Foundational layer of all security research.' },
+    { id:'fpga',             label:'FPGA / VHDL / RTL',          cat:'hardware',   r:18, transferable:true,  desc:'Designed FPGA imaging system at IIT Madras (industry research). Builds FPGA security labs at Ohio University (PhD teaching). Used across both worlds.' },
+    { id:'pcb',              label:'PCB Design & Validation',    cat:'hardware',   r:18, transferable:true,  desc:'End-to-end PCB design at Vertiv (server rack) and Thermo Fisher (instruments). Hardware validation methodology carried into PhD lab probing and characterization.' },
+    { id:'embedded',         label:'Embedded Systems',           cat:'hardware',   r:16, transferable:true,  desc:'C/C++, CAN Bus, UART, SPI, I2C at OsteoDx and IIT Madras. Same platforms used in PhD hardware security lab curriculum (Raspberry Pi, Arduino).' },
+    { id:'dsp-fpga',         label:'DSP in Hardware (FPGA)',     cat:'hardware',   r:14, transferable:false, desc:'Designed VHDL 3×3 windowing module for image processing at IIT Madras. Digital signal processing concepts applied to FPGA-based security primitives.' },
+
+    // INDUSTRY ENGINEERING (new category)
+    { id:'fmea-rca',         label:'FMEA & Root Cause Analysis', cat:'industry',   r:18, transferable:true,  desc:'Performed structured root-cause analyses at Vertiv for production failures. Same analytical discipline applied in PhD fault injection and failure mode analysis for hardware security.' },
+    { id:'dfm-dft',          label:'DFM & Design for Test',      cat:'industry',   r:16, transferable:true,  desc:'Design for Manufacturability and Testability applied at Vertiv. Informs how she structures hardware security validation and test protocols in research.' },
+    { id:'plm-config',       label:'PLM & Config Management',    cat:'industry',   r:15, transferable:false, desc:'Agile PLM at Thermo Fisher for 300+ schematics and 50 ECNs/week. ECN/ECO change control workflows. Product configuration management at scale.' },
+    { id:'motor-control',    label:'Motor Control & BLDC',       cat:'industry',   r:15, transferable:false, desc:'BLDC motor control, trapezoidal velocity profiling, torque limiting, and phase-aligned synchronous control at OsteoDx. Real-time firmware and CAN command architecture.' },
+    { id:'rt-control',       label:'Real-Time Control Systems',  cat:'industry',   r:15, transferable:true,  desc:'Interrupt-driven firmware at 50 Hz, hard real-time constraints in motor control (OsteoDx). Real-time security monitoring is an extension of the same discipline.' },
+    { id:'sensor-daq',       label:'Sensor Integration & DAQ',   cat:'industry',   r:16, transferable:true,  desc:'16-bit ADC, proximity sensors, static load sensors at OsteoDx. Sensor data quality scoring. Same signal characterization skills applied in TCAD device measurement and lab probing.' },
+    { id:'image-processing', label:'Digital Image Processing',   cat:'industry',   r:14, transferable:false, desc:'Python preprocessing pipeline (95% image size reduction, antialiasing) and multichannel 3-sub-aperture imaging system at IIT Madras.' },
+    { id:'hw-sw-codesign',   label:'Hardware-Software Co-design',cat:'industry',   r:16, transferable:true,  desc:'MATLAB-Arduino handshake protocols at OsteoDx. FPGA-Python pipelines at IIT Madras. Embedded C + Python data pipelines throughout PhD. Speaks both languages fluently.' },
+    { id:'thermal-env',      label:'Thermal & Environmental Testing', cat:'industry', r:14, transferable:false, desc:'Temperature and humidity control PCB design at Vertiv. Environmental resilience testing for server rack products. HALT/HASS-aligned test methodology.' },
+    { id:'precision-analog', label:'Precision Analog Circuits',  cat:'industry',   r:14, transferable:true,  desc:'Designed precision radiation measurement sub-assemblies at Thermo Fisher. Analog design discipline directly informs mixed-signal work in hardware security characterization.' },
+    { id:'vendor-mgmt',      label:'Vendor & Supply Chain Mgmt', cat:'industry',   r:13, transferable:false, desc:'Negotiated with 20+ component vendors at Thermo Fisher. Managed contract manufacturing sites globally at Vertiv. Supply chain awareness that informed hardware trust research.' },
+
+    // EMERGING / IN-DEMAND
+    { id:'confcomp',         label:'Confidential Computing',     cat:'emerging',   r:16, transferable:false, desc:'NVIDIA H100 Confidential Compute, Intel SGX, AMD SEV — hardware-based isolation of sensitive workloads. Direct extension of her TEE design principles and root-of-trust research.' },
+    { id:'hw-attestation',   label:'Hardware Attestation',       cat:'emerging',   r:15, transferable:false, desc:'Cryptographic proof that hardware is genuine and unmodified. Her PUF research IS hardware attestation. Directly maps to platform security needs at Qualcomm, Intel, ARM.' },
+    { id:'iot-security',     label:'IoT Security',               cat:'emerging',   r:15, transferable:false, desc:'PUF-based device authentication and root-of-trust for IoT — a direct extension of her research. Massive industry demand at NXP, STMicro, Infineon, Microchip.' },
+    { id:'ai-hw-security',   label:'AI Hardware Security',       cat:'emerging',   r:16, transferable:false, desc:'Securing AI accelerators, model IP protection, hardware trojans in inference chips. Emerging and hot at NVIDIA, Intel Labs, Google. Her fault-injection and root-of-trust work applies directly.' },
+    { id:'secure-fw',        label:'Secure Firmware & OTA',      cat:'emerging',   r:14, transferable:false, desc:'Secure over-the-air updates, authenticated firmware. Bridges her embedded systems background with hardware security research. Key requirement at automotive and IoT companies.' },
+    { id:'hw-fuzz',          label:'Hardware Fuzzing',           cat:'emerging',   r:13, transferable:false, desc:'Automated security testing of hardware interfaces. Growing methodology in silicon validation at Intel, AMD, Qualcomm. Maps to her fault-injection and validation background.' },
+
+    // DATA & MODELING
+    { id:'python-matlab',    label:'Python / MATLAB Pipelines',  cat:'data',       r:18, transferable:true,  desc:'Industry: MATLAB-Arduino handshake (OsteoDx), Python imaging pipeline (IIT Madras). Research: Large-scale simulation processing, entropy/reliability metric extraction. Same tool, both worlds.' },
+    { id:'bayesian',         label:'Bayesian Signal Processing', cat:'data',       r:16, transferable:false, desc:'Multi-exponential curve fitting and Bayesian inference for silicon-born security signature extraction from noisy trap data.' },
+    { id:'stats-modeling',   label:'Statistical Modeling',       cat:'data',       r:14, transferable:true,  desc:'DQI scoring system at OsteoDx. Entropy and uniqueness metrics in PUF research. Statistical process control in Vertiv manufacturing. Statistics as a common thread across all roles.' },
+
+    // EXPERIENCE
+    { id:'phd',              label:'PhD — Ohio University',      cat:'experience', r:20, transferable:false, desc:'4+ years hardware security research. 3 publications, 2 awards, 2 conference presentations in 2026. Original research on PUF, CTS, and root-of-trust.' },
+    { id:'vertiv',           label:'Vertiv',                     cat:'experience', r:16, transferable:false, desc:'Senior Electrical Hardware Engineer (2017–2020). PCB design, global testing protocols, cross-functional teams, root-cause analysis.' },
+    { id:'thermo-fisher',    label:'Thermo Fisher Scientific',   cat:'experience', r:14, transferable:false, desc:'Electrical Hardware Engineer (2017). 15+ legacy products re-engineered. $500K saved. Youngest promoted engineer within 2 months.' },
+    { id:'osteo',            label:'OsteoDx',                    cat:'experience', r:14, transferable:false, desc:'Embedded Systems & Controls Intern (2024). CAN-based motor control, MATLAB-Arduino telemetry, clinical hardware deployment.' },
+    { id:'iit-madras',       label:'IIT Madras Research',        cat:'experience', r:14, transferable:false, desc:'Embedded Systems Research Associate (2014–2015). FPGA-based aerial thermal imaging, VHDL on Lattice ECP3-70EA.' },
+    { id:'iss',              label:'NASA / ISS',                 cat:'experience', r:15, transferable:false, desc:'SSEP Facilitator. Student experiment on SpaceX Falcon 9 Mission 18 to the International Space Station.' }
+  ];
+
+  const links = [
+    // Identity core
+    {s:'aakriti',t:'sees-it-through',w:3},{s:'aakriti',t:'physics-bridge',w:3},{s:'aakriti',t:'parallel-thinker',w:2.5},{s:'aakriti',t:'adapts',w:2},{s:'aakriti',t:'translator',w:2},
+    // Sees It Through
+    {s:'sees-it-through',t:'art',w:3},{s:'sees-it-through',t:'phd',w:2.5},{s:'sees-it-through',t:'music',w:2},{s:'sees-it-through',t:'published',w:2},
+    // Physics bridge
+    {s:'physics-bridge',t:'device-physics',w:3},{s:'physics-bridge',t:'puf',w:3},{s:'physics-bridge',t:'tcad',w:2.5},{s:'physics-bridge',t:'trap-kinetics',w:2.5},
+    // Parallel thinker
+    {s:'parallel-thinker',t:'tcad',w:2},{s:'parallel-thinker',t:'python-matlab',w:2},{s:'parallel-thinker',t:'fmea-rca',w:1.5},
+    // Adapts
+    {s:'adapts',t:'phd',w:2.5},{s:'adapts',t:'vertiv',w:2},
+    // Human skills
+    {s:'translator',t:'teacher',w:3},{s:'translator',t:'published',w:2},{s:'translator',t:'visual-patterns',w:2},{s:'translator',t:'speaker',w:1.5},{s:'translator',t:'tech-writing',w:2},
+    {s:'published',t:'reviewer',w:2.5},{s:'published',t:'speaker',w:2.5},{s:'published',t:'puf',w:2},{s:'published',t:'trap-kinetics',w:2},
+    {s:'xfunc-lead',t:'vertiv',w:2},{s:'xfunc-lead',t:'phd',w:1.5},{s:'tech-writing',t:'vertiv',w:1.5},{s:'tech-writing',t:'published',w:2},
+    // Creative
+    {s:'art',t:'visual-patterns',w:3},{s:'art',t:'music',w:1.5},{s:'music',t:'visual-patterns',w:1.5},
+    {s:'visual-patterns',t:'python-matlab',w:2},{s:'visual-patterns',t:'stats-modeling',w:1.5},
+    // Security cluster
+    {s:'puf',t:'root-of-trust',w:3},{s:'puf',t:'supply-chain',w:2.5},{s:'puf',t:'tcad',w:2.5},{s:'puf',t:'hw-attestation',w:2.5},{s:'puf',t:'iot-security',w:2},
+    {s:'root-of-trust',t:'supply-chain',w:2},{s:'root-of-trust',t:'side-channel',w:2},{s:'root-of-trust',t:'fault-injection',w:2},{s:'root-of-trust',t:'confcomp',w:2},{s:'root-of-trust',t:'secure-fw',w:1.5},
+    {s:'side-channel',t:'fault-injection',w:2.5},{s:'fault-injection',t:'fmea-rca',w:1.5},{s:'fault-injection',t:'hw-fuzz',w:1.5},
+    {s:'trap-kinetics',t:'device-physics',w:3},{s:'trap-kinetics',t:'bayesian',w:2.5},
+    {s:'tcad',t:'device-physics',w:3},{s:'device-physics',t:'supply-chain',w:1.5},{s:'device-physics',t:'precision-analog',w:1.5},
+    {s:'jtag',t:'embedded',w:1.5},{s:'jtag',t:'side-channel',w:1.5},
+    // Hardware
+    {s:'fpga',t:'embedded',w:2},{s:'fpga',t:'iit-madras',w:2.5},{s:'fpga',t:'dsp-fpga',w:2},
+    {s:'pcb',t:'vertiv',w:3},{s:'pcb',t:'thermo-fisher',w:2},{s:'pcb',t:'device-physics',w:1.5},
+    {s:'embedded',t:'python-matlab',w:1.5},{s:'embedded',t:'rt-control',w:2},{s:'embedded',t:'osteo',w:2},
+    {s:'dsp-fpga',t:'image-processing',w:2},
+    // Industry engineering
+    {s:'fmea-rca',t:'vertiv',w:2.5},{s:'fmea-rca',t:'phd',w:1.5},
+    {s:'dfm-dft',t:'vertiv',w:2},{s:'dfm-dft',t:'pcb',w:1.5},
+    {s:'plm-config',t:'thermo-fisher',w:2.5},{s:'plm-config',t:'vendor-mgmt',w:1.5},
+    {s:'motor-control',t:'osteo',w:3},{s:'motor-control',t:'rt-control',w:2},
+    {s:'rt-control',t:'osteo',w:2},{s:'rt-control',t:'embedded',w:1.5},
+    {s:'sensor-daq',t:'osteo',w:2.5},{s:'sensor-daq',t:'python-matlab',w:1.5},{s:'sensor-daq',t:'tcad',w:1},
+    {s:'image-processing',t:'iit-madras',w:2.5},{s:'image-processing',t:'python-matlab',w:2},
+    {s:'hw-sw-codesign',t:'osteo',w:2},{s:'hw-sw-codesign',t:'iit-madras',w:1.5},{s:'hw-sw-codesign',t:'python-matlab',w:1.5},
+    {s:'thermal-env',t:'vertiv',w:2.5},{s:'precision-analog',t:'thermo-fisher',w:2.5},{s:'vendor-mgmt',t:'vertiv',w:2},{s:'vendor-mgmt',t:'supply-chain',w:1.5},
+    // Emerging
+    {s:'confcomp',t:'ai-hw-security',w:1.5},{s:'hw-attestation',t:'iot-security',w:1.5},{s:'ai-hw-security',t:'puf',w:1.5},{s:'secure-fw',t:'embedded',w:1.5},{s:'hw-fuzz',t:'rt-control',w:1},
+    // Data
+    {s:'python-matlab',t:'bayesian',w:2.5},{s:'bayesian',t:'device-physics',w:2},{s:'stats-modeling',t:'python-matlab',w:2},{s:'stats-modeling',t:'osteo',w:1.5},
+    // Experience connections
+    {s:'phd',t:'puf',w:2.5},{s:'phd',t:'trap-kinetics',w:2.5},{s:'phd',t:'teacher',w:1.5},{s:'phd',t:'xfunc-lead',w:1.5},
+    {s:'iss',t:'xfunc-lead',w:1.5},{s:'iit-madras',t:'fpga',w:2.5},
+    {s:'vertiv',t:'adapts',w:2},{s:'thermo-fisher',t:'precision-analog',w:1.5}
+  ];
+
+  const linkData = links.map(l => ({ source: l.s, target: l.t, w: l.w }));
+  const W = window.innerWidth, H = window.innerHeight, HEADER_H = 62;
+
+  const svg = d3.select('#graph').attr('width', W).attr('height', H);
+  const g = svg.append('g');
+
+  svg.call(d3.zoom().scaleExtent([0.2, 3]).on('zoom', e => g.attr('transform', e.transform)));
+
+  const defs = svg.append('defs');
+  // Drop shadow
+  const f = defs.append('filter').attr('id','shadow').attr('x','-20%').attr('y','-20%').attr('width','140%').attr('height','140%');
+  f.append('feDropShadow').attr('dx',0).attr('dy',1).attr('stdDeviation',2).attr('flood-color','rgba(0,0,0,0.1)');
+
+  const sim = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(linkData).id(d=>d.id).distance(d=>75+(d.source.r||14)+(d.target.r||14)).strength(0.3))
+    .force('charge', d3.forceManyBody().strength(d=> -d.r * 20))
+    .force('center', d3.forceCenter(W/2, (H+HEADER_H)/2).strength(0.05))
+    .force('collide', d3.forceCollide().radius(d=>d.r*2.0).strength(0.8))
+    .alphaDecay(0.02);
+
+  const link = g.append('g').selectAll('line').data(linkData).join('line')
+    .attr('stroke', d => {
+      const src = nodes.find(n => n.id === (typeof d.source==='object'?d.source.id:d.source));
+      return src ? COLORS[src.cat]+'44' : '#cbd5e1';
+    })
+    .attr('stroke-width', d => Math.max(0.5, d.w*0.6));
+
+  const node = g.append('g').selectAll('g').data(nodes).join('g').attr('class','node')
+    .call(d3.drag()
+      .on('start',(e,d)=>{ if(!e.active) sim.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y; })
+      .on('drag', (e,d)=>{ d.fx=e.x; d.fy=e.y; })
+      .on('end',  (e,d)=>{ if(!e.active) sim.alphaTarget(0); d.fx=null; d.fy=null; })
+    );
+
+  // Main circle
+  node.append('circle')
+    .attr('r', d=>d.r)
+    .attr('fill', d=>COLORS[d.cat]+'18')
+    .attr('stroke', d=>COLORS[d.cat])
+    .attr('stroke-width', d=>d.cat==='identity'?2.5:1.5)
+    .attr('filter','url(#shadow)');
+
+  // Transferable dashed outer ring
+  node.filter(d=>d.transferable)
+    .append('circle')
+    .attr('class','transferable-ring')
+    .attr('r', d=>d.r+5)
+    .attr('fill','none')
+    .attr('stroke','#7c3aed')
+    .attr('stroke-width',1.2)
+    .attr('stroke-dasharray','4 2')
+    .attr('opacity',0.6);
+
+  // Labels
+  node.each(function(d) {
+    const words = d.label.split(' ');
+    const lines = []; let cur = '';
+    const maxW = d.r < 16 ? 9 : d.r < 20 ? 12 : 15;
+    for (const w of words) {
+      if ((cur+' '+w).trim().length > maxW && cur) { lines.push(cur.trim()); cur=w; }
+      else cur=(cur+' '+w).trim();
+    }
+    if(cur) lines.push(cur);
+    const fs = d.r>=26?9:d.r>=18?8:d.r>=14?7:6.5;
+    const lh = fs+2.5;
+    const yStart = -(lines.length-1)*lh/2;
+    const sel = d3.select(this);
+    lines.forEach((line,i) => {
+      sel.append('text')
+        .attr('text-anchor','middle').attr('y', yStart+i*lh)
+        .attr('fill', d.cat==='identity'?'#1e293b':'#334155')
+        .attr('font-size',fs+'px').attr('font-weight',d.cat==='identity'?'700':'500')
+        .attr('font-family','Inter, system-ui, sans-serif')
+        .attr('pointer-events','none').attr('dominant-baseline','middle')
+        .text(line);
+    });
+  });
+
+  // Tooltip
+  const tip = document.getElementById('tooltip');
+  node
+    .on('mouseenter', function(e,d) {
+      d3.select(this).select('circle').attr('fill',COLORS[d.cat]+'35').attr('stroke-width',d.cat==='identity'?3.5:2.5);
+      tip.querySelector('.t-label').textContent = d.label;
+      tip.querySelector('.t-cat').textContent = CAT_LABELS[d.cat];
+      tip.querySelector('.t-cat').style.color = COLORS[d.cat];
+      // Show/hide transferable badge
+      let tb = tip.querySelector('.t-transfer');
+      if(!tb){ tb=document.createElement('div'); tb.className='t-transfer'; tip.querySelector('.t-cat').after(tb); }
+      if(d.transferable){ tb.textContent='↔ Transferable: Industry + Research'; tb.style.display='inline-block'; }
+      else { tb.style.display='none'; }
+      tip.querySelector('.t-desc').textContent = d.desc;
+      tip.style.opacity='1';
+    })
+    .on('mousemove', function(ev) {
+      const x=ev.clientX+18, y=ev.clientY-12;
+      tip.style.left=(x+260>W?ev.clientX-276:x)+'px';
+      tip.style.top=(y+140>H?ev.clientY-150:y)+'px';
+    })
+    .on('mouseleave', function(e,d) {
+      d3.select(this).select('circle').attr('fill',COLORS[d.cat]+'18').attr('stroke-width',d.cat==='identity'?2.5:1.5);
+      tip.style.opacity='0';
+    });
+
+  sim.on('tick', ()=>{
+    link.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y).attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+    node.attr('transform',d=>`translate(${d.x},${d.y})`);
+  });
+
+  // Category filter buttons
+  let activeFilter = 'all';
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      this.classList.add('active');
+      activeFilter = this.dataset.cat;
+      const fade = activeFilter === 'all' ? 1 : 0.08;
+      node.style('opacity', d => activeFilter==='all' || d.cat===activeFilter ? 1 : fade);
+      link.style('opacity', d => {
+        if(activeFilter==='all') return 1;
+        const sc = typeof d.source==='object'?d.source.cat:nodes.find(n=>n.id===d.source)?.cat;
+        const tc = typeof d.target==='object'?d.target.cat:nodes.find(n=>n.id===d.target)?.cat;
+        return sc===activeFilter||tc===activeFilter ? 0.8 : 0.04;
+      });
+    });
+  });
+
+  window.addEventListener('resize', ()=>{
+    const W2=window.innerWidth, H2=window.innerHeight;
+    svg.attr('width',W2).attr('height',H2);
+    sim.force('center',d3.forceCenter(W2/2,(H2+HEADER_H)/2).strength(0.05)).alpha(0.3).restart();
+  });
+}
+</script>
+</body>
+</html>

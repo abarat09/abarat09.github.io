@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aakriti Barat | Hardware Security Researcher | PhD Electrical Engineering</title>
+
+  <meta name="description" content="Aakriti Barat — PhD candidate in Electrical Engineering at Ohio University specializing in hardware security, Physically Unclonable Functions (PUF), IC authentication, and silicon root-of-trust. Published IEEE and ACM researcher with TCAD/HSPICE expertise. Available Fall 2026.">
+  <meta name="keywords" content="hardware security engineer, Physically Unclonable Function, PUF, IC authentication, root of trust, TCAD, HSPICE, supply chain security, silicon security, embedded security, FPGA security, side-channel analysis, fault injection, hardware cybersecurity, PhD electrical engineering, semiconductor security">
+  <meta name="author" content="Aakriti Barat">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Aakriti Barat | Hardware Security Researcher">
+  <meta property="og:description" content="PhD candidate in EE specializing in hardware security, PUF, IC authentication, and silicon root-of-trust. IEEE and ACM published. Available Fall 2026.">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://aakritibarat.github.io">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Person","name":"Aakriti Barat","jobTitle":"Hardware Security Researcher","email":"aakritibarat30@gmail.com","url":"https://aakritibarat.github.io","sameAs":["https://www.linkedin.com/in/aakritibarat"],"alumniOf":[{"@type":"CollegeOrUniversity","name":"Ohio University"},{"@type":"CollegeOrUniversity","name":"The Ohio State University"}],"knowsAbout":["Hardware Security","Physically Unclonable Functions","TCAD Simulation","IC Authentication","Root of Trust","FPGA Design","Embedded Systems","Supply Chain Security"]}
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white:   #ffffff;
+      --bg:      #f8fafc;
+      --bg2:     #f1f5f9;
+      --border:  #e2e8f0;
+      --border2: #cbd5e1;
+      --text:    #0f172a;
+      --text2:   #334155;
+      --muted:   #64748b;
+      --accent:  #1d4ed8;
+      --accent-l:#eff6ff;
+      --accent2: #7c3aed;
+      --green:   #047857;
+      --green-l: #ecfdf5;
+      --radius:  10px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--white); color: var(--text); line-height: 1.7; font-size: 16px; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .nav-logo { font-weight: 800; font-size: 1rem; color: var(--text); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.15s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { background: var(--accent) !important; color: #fff !important; padding: 0.4rem 1.1rem; border-radius: 6px; font-weight: 600 !important; }
+    .nav-cta:hover { background: #1e40af !important; }
+
+    /* ── LAYOUT ── */
+    section { padding: 80px 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-eyebrow { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .section-title { font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 800; letter-spacing: -0.03em; color: var(--text); margin-bottom: 2.5rem; }
+    .alt-bg { background: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    /* ── HERO ── */
+    #hero { background: var(--white); padding: 72px 2rem 80px; }
+    .hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 380px; gap: 4rem; align-items: center; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      background: var(--green-l); border: 1px solid #a7f3d0; color: var(--green);
+      font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 100px; margin-bottom: 1.5rem;
+    }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; color: var(--text); margin-bottom: 0.5rem; }
+    h1 span { color: var(--accent); }
+    .hero-subtitle { font-size: 1rem; color: var(--muted); font-weight: 500; margin-bottom: 1.5rem; }
+    .hero-desc { font-size: 1rem; color: var(--text2); line-height: 1.85; margin-bottom: 2rem; max-width: 560px; }
+    .hero-desc strong { color: var(--text); font-weight: 600; }
+    .hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+    .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1.3rem; border-radius: 7px; font-weight: 600; font-size: 0.875rem; text-decoration: none; transition: all 0.15s; border: none; cursor: pointer; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #1e40af; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(29,78,216,0.25); }
+    .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border2); }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+    .hero-stats { display: flex; gap: 2rem; flex-wrap: wrap; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+    .stat-num { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.03em; color: var(--text); }
+    .stat-num span { color: var(--accent); }
+    .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; }
+    .hero-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 14px;
+      padding: 1.75rem; display: flex; flex-direction: column; gap: 1rem;
+    }
+    .hero-card-row { display: flex; flex-direction: column; gap: 0.2rem; }
+    .hc-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .hc-value { font-size: 0.875rem; color: var(--text); font-weight: 500; line-height: 1.5; }
+    .hc-value.available { color: var(--green); font-weight: 700; }
+    .hc-value a { color: var(--accent); text-decoration: none; }
+    .hc-value a:hover { text-decoration: underline; }
+    .hc-divider { height: 1px; background: var(--border); }
+
+    /* ── ABOUT ── */
+    .about-body { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+    .about-text p { color: var(--text2); line-height: 1.9; margin-bottom: 1rem; font-size: 0.95rem; }
+    .about-text p strong { color: var(--text); font-weight: 600; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.25rem; }
+    .tag { font-size: 0.75rem; padding: 0.25rem 0.65rem; border-radius: 5px; background: var(--accent-l); color: var(--accent); font-weight: 500; border: 1px solid #bfdbfe; }
+    .highlight-box { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; }
+    .highlight-box + .highlight-box { margin-top: 0.85rem; }
+    .hb-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent2); margin-bottom: 0.3rem; }
+    .hb-value { font-size: 0.875rem; color: var(--text); font-weight: 500; line-height: 1.5; }
+
+    /* ── RESEARCH ── */
+    .paper { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem 2rem; margin-bottom: 1rem; transition: box-shadow 0.15s; }
+    .paper:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+    .paper-top { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+    .paper-badge { font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; }
+    .ieee { background: #dbeafe; color: #1e40af; }
+    .acm  { background: #ede9fe; color: #6d28d9; }
+    .yr   { font-size: 0.75rem; color: var(--muted); }
+    .role-badge { font-size: 0.7rem; background: var(--bg2); color: var(--muted); padding: 0.15rem 0.5rem; border-radius: 4px; }
+    .paper h3 { font-size: 1rem; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: 0.65rem; }
+    .paper p { font-size: 0.875rem; color: var(--text2); line-height: 1.75; }
+    .paper p strong { color: var(--text); font-weight: 600; }
+    .review-box { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.5rem; font-size: 0.875rem; color: var(--muted); margin-top: 0.5rem; }
+    .review-box strong { color: var(--text); }
+
+    /* ── SKILLS ── */
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+    .skill-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.4rem 1.5rem; }
+    .skill-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.9rem; }
+    .skill-title.sec  { color: #1e40af; }
+    .skill-title.sim  { color: #6d28d9; }
+    .skill-title.hw   { color: #047857; }
+    .skill-title.emb  { color: #b45309; }
+    .skill-title.tool { color: #be123c; }
+    .pills { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .pill { font-size: 0.72rem; padding: 0.25rem 0.6rem; border-radius: 4px; background: var(--bg2); color: var(--text2); border: 1px solid var(--border); font-weight: 500; }
+
+    /* ── EXPERIENCE ── */
+    .tl { position: relative; padding-left: 1.75rem; }
+    .tl::before { content:''; position:absolute; left:0; top:10px; bottom:10px; width:1px; background:var(--border2); }
+    .tl-item { position: relative; margin-bottom: 2.25rem; }
+    .tl-item::before { content:''; position:absolute; left:-1.875rem; top:8px; width:9px; height:9px; border-radius:50%; background:var(--accent); border:2px solid var(--white); box-shadow:0 0 0 1px var(--accent); }
+    .tl-item:nth-child(2)::before { background:#7c3aed; box-shadow:0 0 0 1px #7c3aed; }
+    .tl-item:nth-child(3)::before { background:#047857; box-shadow:0 0 0 1px #047857; }
+    .tl-item:nth-child(4)::before { background:#b45309; box-shadow:0 0 0 1px #b45309; }
+    .tl-item:nth-child(5)::before { background:#be123c; box-shadow:0 0 0 1px #be123c; }
+    .tl-head { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap; margin-bottom:0.5rem; }
+    .tl-role { font-weight:700; font-size:0.95rem; color:var(--text); }
+    .tl-company { font-size:0.825rem; color:var(--accent); font-weight:600; margin-top:0.15rem; }
+    .tl-date { font-size:0.75rem; color:var(--muted); white-space:nowrap; background:var(--bg2); padding:0.2rem 0.6rem; border-radius:4px; border:1px solid var(--border); }
+    .tl-list { list-style:none; margin-top:0.5rem; }
+    .tl-list li { font-size:0.85rem; color:var(--text2); padding-left:1.1rem; position:relative; margin-bottom:0.3rem; line-height:1.65; }
+    .tl-list li::before { content:'–'; position:absolute; left:0; color:var(--border2); }
+    .tl-list li strong { color:var(--text); font-weight:600; }
+
+    /* ── EDUCATION ── */
+    .edu-cards { display:flex; flex-direction:column; gap:0.85rem; }
+    .edu-card { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:1.2rem 1.5rem; display:flex; gap:1.1rem; align-items:flex-start; }
+    .edu-icon { width:38px; height:38px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+    .edu-icon.d1 { background:#dbeafe; }
+    .edu-icon.d2 { background:#ede9fe; }
+    .edu-icon.d3 { background:#dcfce7; }
+    .edu-deg { font-weight:700; font-size:0.9rem; color:var(--text); margin-bottom:0.15rem; }
+    .edu-sch { font-size:0.825rem; color:var(--accent); font-weight:600; margin-bottom:0.15rem; }
+    .edu-meta { font-size:0.75rem; color:var(--muted); }
+
+    /* ── SERVICE ── */
+    .svc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1rem; }
+    .svc-card { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:1.2rem 1.5rem; }
+    .svc-title { font-weight:700; font-size:0.875rem; color:var(--text); margin-bottom:0.35rem; }
+    .svc-desc { font-size:0.8rem; color:var(--muted); line-height:1.65; }
+
+    /* ── AWARDS ── */
+    .awards-list { display:flex; flex-direction:column; gap:0.75rem; }
+    .award { display:flex; align-items:center; gap:1rem; background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:1rem 1.5rem; }
+    .award-icon { font-size:1.2rem; }
+    .award-name { font-weight:600; font-size:0.9rem; color:var(--text); }
+    .award-org { font-size:0.78rem; color:var(--muted); }
+
+    /* ── GRAPH SECTION ── */
+    #graph-section { background: var(--white); padding: 80px 2rem; }
+    .graph-intro { max-width: 600px; margin-bottom: 2rem; }
+    .graph-intro p { font-size: 0.95rem; color: var(--text2); line-height: 1.8; }
+    .graph-frame-wrap {
+      border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      position: relative;
+    }
+    .graph-frame-wrap iframe { display: block; width: 100%; height: 560px; border: none; }
+    .graph-fullscreen {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      margin-top: 0.85rem; font-size: 0.8rem; color: var(--accent);
+      text-decoration: none; font-weight: 500;
+    }
+    .graph-fullscreen:hover { text-decoration: underline; }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--bg); border-top: 1px solid var(--border); }
+    .contact-inner { max-width: 600px; margin: 0 auto; text-align: center; }
+    .contact-inner .section-eyebrow, .contact-inner .section-title { text-align: center; }
+    .contact-inner .section-title { margin-bottom: 0.75rem; }
+    .contact-desc { font-size: 0.95rem; color: var(--text2); margin-bottom: 2rem; line-height: 1.8; }
+    .contact-buttons { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .contact-email { font-size: 0.875rem; color: var(--muted); }
+    .contact-email a { color: var(--accent); text-decoration: none; }
+    .contact-email a:hover { text-decoration: underline; }
+
+    footer { padding: 2rem; text-align: center; font-size: 0.78rem; color: var(--muted); border-top: 1px solid var(--border); background: var(--white); }
+
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-card { display: none; }
+      .about-body { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      section { padding: 56px 1.25rem; }
+      nav { padding: 0 1.25rem; }
+      .nav-links li:not(:last-child) { display: none; }
+      .hero-stats { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="#hero">Aakriti <span>Barat</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#graph-section">Skills Map</a></li>
+      <li><a href="#contact" class="nav-cta">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="badge"><span class="badge-dot"></span> Available Fall 2026</div>
+      <h1>Aakriti<br><span>Barat</span></h1>
+      <p class="hero-subtitle">Hardware Security Researcher &nbsp;·&nbsp; PhD Candidate, Electrical Engineering</p>
+      <p class="hero-desc">
+        I build <strong>silicon-level trust primitives</strong> — modeling device physics,
+        designing and validating hardware authentication mechanisms, and translating
+        <strong>Physically Unclonable Functions (PUF)</strong> into deployable security
+        for semiconductor platforms, supply chains, and embedded systems.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#research">View Research</a>
+        <a class="btn btn-ghost" href="https://www.linkedin.com/in/aakritibarat" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn btn-ghost" href="#contact">Contact</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">3<span>+</span></div>
+          <div class="stat-label">IEEE / ACM Publications</div>
+        </div>
+        <div>
+          <div class="stat-num">9<span>+</span></div>
+          <div class="stat-label">Years Engineering Experience</div>
+        </div>
+        <div>
+          <div class="stat-num">4<span>+</span></div>
+          <div class="stat-label">Years Hardware Security Research</div>
+        </div>
+        <div>
+          <div class="stat-num">2</div>
+          <div class="stat-label">Conference Presentations 2026</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-card-row">
+        <div class="hc-label">Status</div>
+        <div class="hc-value available">Available Fall 2026</div>
+      </div>
+      <div class="hc-divider"></div>
+      <div class="hero-card-row">
+        <div class="hc-label">Location</div>
+        <div class="hc-value">Athens, OH · Open to Relocation (USA)</div>
+      </div>
+      <div class="hc-divider"></div>
+      <div class="hero-card-row">
+        <div class="hc-label">Current Role</div>
+        <div class="hc-value">PhD Researcher, Hardware Security<br>Ohio University</div>
+      </div>
+      <div class="hc-divider"></div>
+      <div class="hero-card-row">
+        <div class="hc-label">Target Roles</div>
+        <div class="hc-value">Hardware Security Engineer · Silicon Security Researcher · Root of Trust Engineer · Device Reliability Engineer</div>
+      </div>
+      <div class="hc-divider"></div>
+      <div class="hero-card-row">
+        <div class="hc-label">Contact</div>
+        <div class="hc-value"><a href="mailto:aakritibarat30@gmail.com">aakritibarat30@gmail.com</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="alt-bg">
+  <div class="container">
+    <p class="section-eyebrow">About</p>
+    <h2 class="section-title">Device Physics Meets Hardware Security</h2>
+    <div class="about-body">
+      <div class="about-text">
+        <p>My research develops <strong>physics-driven methods</strong> to extract, model, and validate silicon-born signatures for authentication, aging diagnostics, and supply-chain verification. I combine experimental device analysis, TCAD simulation, and Bayesian signal processing to turn subtle device-level phenomena into robust security primitives.</p>
+        <p>The most defensible hardware security solutions start at the <strong>device level</strong>. By modeling trap kinetics, process variation, and defect-driven signatures, I create authentication constructs rooted in physics — applicable across technology nodes and measurable in the lab.</p>
+        <p>I pair academic rigor with industry pragmatism. At <strong>Vertiv</strong> and <strong>Thermo Fisher Scientific</strong> I led PCB validation and platform development — experience that informs how I design experiments, translate results to engineering requirements, and communicate risk to stakeholders.</p>
+        <div class="tag-row">
+          <span class="tag">PUF</span>
+          <span class="tag">Root of Trust</span>
+          <span class="tag">IC Authentication</span>
+          <span class="tag">TCAD</span>
+          <span class="tag">Supply Chain Security</span>
+          <span class="tag">Fault Injection</span>
+          <span class="tag">Side-Channel Analysis</span>
+          <span class="tag">Hardware Reliability</span>
+        </div>
+      </div>
+      <div>
+        <div class="highlight-box">
+          <div class="hb-label">Open To</div>
+          <div class="hb-value">Industry roles at semiconductor and tech companies · Research positions at cap-exempt institutions (national labs, nonprofits)</div>
+        </div>
+        <div class="highlight-box">
+          <div class="hb-label">Research Focus</div>
+          <div class="hb-value">Silicon-born authentication primitives · Hardware root-of-trust architectures · Supply-chain integrity · Device reliability modeling</div>
+        </div>
+        <div class="highlight-box">
+          <div class="hb-label">Industry Experience</div>
+          <div class="hb-value">Vertiv (server infrastructure PCB) · Thermo Fisher Scientific (precision instruments) · OsteoDx (embedded clinical systems) · IIT Madras (FPGA imaging)</div>
+        </div>
+        <div class="highlight-box">
+          <div class="hb-label">NASA / ISS</div>
+          <div class="hb-value">SSEP Facilitator — student experiment flew on SpaceX Falcon 9 Mission 18 to the International Space Station</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research">
+  <div class="container">
+    <p class="section-eyebrow">Publications</p>
+    <h2 class="section-title">Research &amp; Published Work</h2>
+
+    <div class="paper">
+      <div class="paper-top">
+        <span class="paper-badge ieee">IEEE · MWSCAS 2025</span>
+        <span class="yr">2025</span>
+        <span class="role-badge">First Author</span>
+      </div>
+      <h3>Design and Verification of a Novel PUF for Enhanced IC Security Based on Total Harmonic Distortion in CMOS Inverters</h3>
+      <p>Developed and validated a novel <strong>Physically Unclonable Function (PUF)</strong> architecture using Total Harmonic Distortion (THD) in CMOS inverters as an entropy source for IC authentication. Verified through HSPICE and TCAD simulation, demonstrating robustness against cloning attacks and applicability to <strong>supply-chain counterfeiting prevention</strong> and hardware root-of-trust architectures.</p>
+    </div>
+
+    <div class="paper">
+      <div class="paper-top">
+        <span class="paper-badge ieee">IEEE · MWSCAS 2025</span>
+        <span class="yr">2025</span>
+        <span class="role-badge">First Author</span>
+      </div>
+      <h3>On-Chip Monitoring of Traps via Current Transient Spectroscopy: A New Security Tool for Process Authentication and Device Reliability</h3>
+      <p>Demonstrated that <strong>Current Transient Spectroscopy (CTS)</strong> — a technique for monitoring charge traps in CMOS devices — can function as a silicon-level authentication and aging diagnostic mechanism. Developed Python and MATLAB pipelines with Bayesian and multi-exponential signal processing to extract trap kinetics as <strong>process-specific device signatures</strong> for both security authentication and hardware reliability monitoring.</p>
+    </div>
+
+    <div class="paper">
+      <div class="paper-top">
+        <span class="paper-badge acm">ACM · GLSVLSI 2026</span>
+        <span class="yr">2026</span>
+        <span class="role-badge">Peer Reviewed · Accepted</span>
+      </div>
+      <h3>A PUF-Based Security Framework for Fault and Intrusion Detection</h3>
+      <p>Developed a hardware framework for detecting <strong>faults and intrusion attempts in industrial control systems</strong> using PUF-based root-of-trust primitives. Bridges silicon-level IC authentication with system-level operational monitoring — directly applicable to securing industrial infrastructure, embedded platforms, and AI inference hardware.</p>
+    </div>
+
+    <div class="review-box">
+      <strong>Peer Reviewer</strong> — IEEE and ACM in IC hardware security, cryptographic engineering, VLSI design, and embedded systems. Presenting at two additional conferences in 2026.
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="alt-bg">
+  <div class="container">
+    <p class="section-eyebrow">Technical Skills</p>
+    <h2 class="section-title">Areas of Expertise</h2>
+    <div class="skills-grid">
+
+      <div class="skill-card">
+        <div class="skill-title sec">Hardware Security</div>
+        <div class="pills">
+          <span class="pill">Physically Unclonable Function (PUF)</span>
+          <span class="pill">Root of Trust</span>
+          <span class="pill">Secure Boot</span>
+          <span class="pill">Hardware Cryptography</span>
+          <span class="pill">Side-Channel Analysis</span>
+          <span class="pill">Fault Injection</span>
+          <span class="pill">JTAG Security</span>
+          <span class="pill">IC Authentication</span>
+          <span class="pill">Supply-Chain Trust</span>
+          <span class="pill">TEE Design Principles</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-title sim">Simulation &amp; Modeling</div>
+        <div class="pills">
+          <span class="pill">TCAD</span>
+          <span class="pill">HSPICE</span>
+          <span class="pill">Python</span>
+          <span class="pill">MATLAB</span>
+          <span class="pill">Bayesian Inference</span>
+          <span class="pill">Multi-Exponential Signal Processing</span>
+          <span class="pill">Statistical Modeling</span>
+          <span class="pill">AWS Data Analytics</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-title hw">Hardware Design &amp; FPGA</div>
+        <div class="pills">
+          <span class="pill">FPGA (Xilinx / Lattice ECP3)</span>
+          <span class="pill">VHDL</span>
+          <span class="pill">RTL Design</span>
+          <span class="pill">PCB Design</span>
+          <span class="pill">Schematic Capture</span>
+          <span class="pill">BOM / DFM</span>
+          <span class="pill">Prototype Fabrication</span>
+          <span class="pill">Mentor Graphics</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-title emb">Embedded Systems</div>
+        <div class="pills">
+          <span class="pill">Embedded C / C++</span>
+          <span class="pill">CAN Bus</span>
+          <span class="pill">UART / SPI / I2C</span>
+          <span class="pill">Arduino</span>
+          <span class="pill">Raspberry Pi</span>
+          <span class="pill">16-bit ADC</span>
+          <span class="pill">Motor Control</span>
+          <span class="pill">Interrupt-Driven Firmware</span>
+          <span class="pill">Real-Time Systems</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-title tool">Tools &amp; Standards</div>
+        <div class="pills">
+          <span class="pill">Git</span>
+          <span class="pill">Jupyter</span>
+          <span class="pill">Bash</span>
+          <span class="pill">Agile PLM</span>
+          <span class="pill">ECN / ECO Workflows</span>
+          <span class="pill">IEEE Standards</span>
+          <span class="pill">Requirements Documentation</span>
+          <span class="pill">Risk Analysis</span>
+          <span class="pill">Test Planning</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <p class="section-eyebrow">Experience</p>
+    <h2 class="section-title">Engineering &amp; Research Timeline</h2>
+    <div class="tl">
+
+      <div class="tl-item">
+        <div class="tl-head">
+          <div>
+            <div class="tl-role">PhD Researcher — Hardware Security &amp; On-Chip Authentication</div>
+            <div class="tl-company">Ohio University · Athens, OH</div>
+          </div>
+          <span class="tl-date">May 2020 – Fall 2026</span>
+        </div>
+        <ul class="tl-list">
+          <li>Designed and silicon-validated a <strong>CMOS inverter-based PUF</strong> using THD as entropy source for root-of-trust chip authentication, verified through HSPICE and TCAD simulation.</li>
+          <li>Built Python/MATLAB pipelines to process large-scale simulation data and extract <strong>entropy, uniqueness, and reliability metrics</strong> for security primitives.</li>
+          <li>Co-developed <strong>PUF-based fault and intrusion detection framework</strong> for industrial control systems; published in IEEE and ACM.</li>
+          <li>Coordinated cross-researcher efforts to secure <strong>$15,000 departmental funding</strong> and organize 3-day hardware security workshops (25 participants).</li>
+          <li>Designed FPGA/VHDL instructional labs with Raspberry Pi and Jupyter; achieved <strong>100% proficiency across 15 graduate students</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-head">
+          <div>
+            <div class="tl-role">Embedded Systems &amp; Controls Engineering Intern</div>
+            <div class="tl-company">OsteoDx, Inc. · Athens, OH</div>
+          </div>
+          <span class="tl-date">May 2024 – Aug 2024</span>
+        </div>
+        <ul class="tl-list">
+          <li>Contributed to CAN-based multi-motor control system (Arduino Uno + MCP2515) achieving 500 Kbps throughput and 10 Hz synchronization across 3 BLDC motors.</li>
+          <li>Developed MATLAB-Arduino handshake pipeline with ACK/NACK verification; contributed to telemetry data integrity improvements across 9,644 trials.</li>
+          <li>Integrated 16-bit ADC modules with analog proximity and static load sensors; contributed to motion profiling and safety threshold enforcement for clinical use.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-head">
+          <div>
+            <div class="tl-role">Senior Electrical Hardware Design Engineer</div>
+            <div class="tl-company">Vertiv · Columbus, OH</div>
+          </div>
+          <span class="tl-date">Dec 2017 – Mar 2020</span>
+        </div>
+        <ul class="tl-list">
+          <li>Led end-to-end design and validation of a <strong>Temperature &amp; Humidity Control PCB</strong> for server rack products, from requirements specification through manufacturing validation.</li>
+          <li>Authored global testing cookbook that cut contract manufacturing timelines by <strong>80%</strong> and reduced production failure rates by 20%.</li>
+          <li>Drove 5 major component updates with a cross-functional team of 10+, cutting maintenance costs by 10%.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-head">
+          <div>
+            <div class="tl-role">Electrical Hardware Engineer</div>
+            <div class="tl-company">Thermo Fisher Scientific · Cleveland, OH</div>
+          </div>
+          <span class="tl-date">Jun 2017 – Dec 2017</span>
+        </div>
+        <ul class="tl-list">
+          <li>Re-engineered 15+ legacy radiation measurement instruments, extending product lifespan by <strong>5 years</strong> and saving <strong>$500K</strong> in redesign costs; redesigned 300+ schematics.</li>
+          <li>Processed up to <strong>50 ECNs weekly</strong>; negotiated sourcing with 20+ vendors, improving quarterly margins by 15%.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-head">
+          <div>
+            <div class="tl-role">Embedded Systems Research Associate — FPGA &amp; Thermal Imaging</div>
+            <div class="tl-company">Indian Institute of Technology, Madras · India</div>
+          </div>
+          <span class="tl-date">Aug 2014 – Jul 2015</span>
+        </div>
+        <ul class="tl-list">
+          <li>Improved aerial thermal imaging resolution by <strong>50%</strong> (to 960×720) by engineering a multichannel 3-sub-aperture imaging system and VHDL windowing module on Lattice ECP3-70EA FPGA.</li>
+          <li>Delivered a sub-100g, 5V/1A thermal camera validated across 3 successful nighttime field missions.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education" class="alt-bg">
+  <div class="container">
+    <p class="section-eyebrow">Education</p>
+    <h2 class="section-title">Academic Background</h2>
+    <div class="edu-cards">
+      <div class="edu-card">
+        <div class="edu-icon d1">🎓</div>
+        <div>
+          <div class="edu-deg">Doctor of Philosophy (PhD) — Electrical &amp; Computer Engineering</div>
+          <div class="edu-sch">Ohio University · Athens, OH</div>
+          <div class="edu-meta">May 2020 – Fall 2026 &nbsp;·&nbsp; Research: Hardware Security, PUF, On-Chip Authentication</div>
+        </div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-icon d2">📐</div>
+        <div>
+          <div class="edu-deg">Master of Science — Electrical &amp; Computer Engineering</div>
+          <div class="edu-sch">The Ohio State University · Columbus, OH</div>
+          <div class="edu-meta">Aug 2015 – Jan 2017 &nbsp;·&nbsp; Thesis: Phase Locked Loops and Wavelet Analysis</div>
+        </div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-icon d3">⚡</div>
+        <div>
+          <div class="edu-deg">Bachelor of Engineering — Electronics &amp; Communication Engineering</div>
+          <div class="edu-sch">University Institute of Technology, RGPV · India</div>
+          <div class="edu-meta">2010 – 2014</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICE -->
+<section id="service">
+  <div class="container">
+    <p class="section-eyebrow">Teaching &amp; Service</p>
+    <h2 class="section-title">Beyond the Lab</h2>
+    <div class="svc-grid">
+      <div class="svc-card">
+        <div class="svc-title">Graduate Teaching Assistant</div>
+        <div class="svc-desc">Ohio University (2021–2025). Embedded Systems (95% project completion), Cybersecurity (100% pass rate, 50+ students), Digital Circuits, Micro &amp; Nanofabrication, Nano-electronic Devices.</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-title">Peer Reviewer — IEEE &amp; ACM</div>
+        <div class="svc-desc">Active reviewer for hardware security, VLSI design, and cryptographic engineering conferences and journals.</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-title">SSEP Facilitator — NASA / ISS</div>
+        <div class="svc-desc">Led undergraduate teams designing flight experiments for the Student Spaceflight Experiments Program. Experiment included in SpaceX Falcon 9 Mission 18 ISS payload (2022–2023).</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-title">Workshop Organizer</div>
+        <div class="svc-desc">Co-organized 3-day interdisciplinary hardware security workshop for 25 participants. Coordinated $15,000 in departmental funding.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AWARDS -->
+<section id="awards" style="padding-top:0; padding-bottom:80px;">
+  <div class="container">
+    <p class="section-eyebrow">Recognition</p>
+    <h2 class="section-title">Awards &amp; Honors</h2>
+    <div class="awards-list">
+      <div class="award">
+        <span class="award-icon">🏆</span>
+        <div>
+          <div class="award-name">Dr. Harold F. Klock Endowed Scholarship</div>
+          <div class="award-org">Ohio University — Awarded for outstanding research performance</div>
+        </div>
+      </div>
+      <div class="award">
+        <span class="award-icon">🥇</span>
+        <div>
+          <div class="award-name">G.E. Smith &amp; G.V. Smith Memorial Award</div>
+          <div class="award-org">Ohio University — Outstanding achievement in electrical engineering</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS / PERSONALITY MAP -->
+<section id="graph-section" class="alt-bg">
+  <div class="container">
+    <p class="section-eyebrow">Skills &amp; Identity Map</p>
+    <h2 class="section-title">How I Think &amp; What I Bring</h2>
+    <div class="graph-intro">
+      <p>An interactive map of how my technical expertise, research experience, and cognitive traits connect. Drag nodes to explore — hover any node to read what's behind it.</p>
+    </div>
+    <div class="graph-frame-wrap">
+      <iframe src="graph.html" title="Skills and Personality Map" scrolling="no"></iframe>
+    </div>
+    <a class="graph-fullscreen" href="graph.html" target="_blank">↗ Open full screen</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-inner">
+      <p class="section-eyebrow">Contact</p>
+      <h2 class="section-title">Let's Connect</h2>
+      <p class="contact-desc">I'm actively exploring hardware security and silicon engineering roles for Fall 2026. If you're working on secure semiconductors, root-of-trust architectures, or supply-chain integrity — I'd love to talk.</p>
+      <div class="contact-buttons">
+        <a class="btn btn-primary" href="mailto:aakritibarat30@gmail.com">✉ Email Me</a>
+        <a class="btn btn-ghost" href="https://www.linkedin.com/in/aakritibarat" target="_blank" rel="noopener">LinkedIn Profile</a>
+      </div>
+      <p class="contact-email"><a href="mailto:aakritibarat30@gmail.com">aakritibarat30@gmail.com</a></p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Aakriti Barat &nbsp;·&nbsp; Hardware Security Researcher &nbsp;·&nbsp; PhD Candidate, Electrical Engineering</p>
+</footer>
+
+</body>
+</html>
