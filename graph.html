@@ -190,7 +190,7 @@ function initGraph() {
   // transferable: true = dashed ring = skill that bridges industry↔research contexts
   const nodes = [
     // IDENTITY
-    { id:'aakriti',          label:'Aakriti Barat',              cat:'identity',   r:32, transferable:false, desc:'Hardware Security Researcher. PhD Candidate in Electrical Engineering. Scientist, engineer, teacher, and maker — depending on what the problem needs.' },
+    { id:'aakriti',          label:'Aakriti Barat',              cat:'identity',   r:46, transferable:false, hero:true, desc:'Hardware Security Researcher. PhD Candidate in Electrical Engineering. Scientist, engineer, teacher, and maker — depending on what the problem needs.' },
     { id:'sees-it-through',  label:'Sees It Through',            cat:'identity',   r:26, transferable:false, desc:'Picked up abstract painting → gallery shows → town-recognized artist. Picked up hardware security → 3 published papers. Doesn\'t do things halfway. Ever.' },
     { id:'physics-bridge',   label:'Physics → Security Bridge',  cat:'identity',   r:24, transferable:false, desc:'Translates device-level physics into deployable security primitives. Models what happens at the silicon boundary — then asks what it means for trust.' },
     { id:'parallel-thinker', label:'Parallel Thinker',           cat:'identity',   r:20, transferable:false, desc:'Maps the problem space AND gathers data simultaneously. Doesn\'t wait for a complete picture before acting — works both tracks at once.' },
@@ -349,10 +349,19 @@ function initGraph() {
   // Main circle
   node.append('circle')
     .attr('r', d=>d.r)
-    .attr('fill', d=>COLORS[d.cat]+'18')
-    .attr('stroke', d=>COLORS[d.cat])
-    .attr('stroke-width', d=>d.cat==='identity'?2.5:1.5)
+    .attr('fill', d=>d.hero ? '#0f172a' : COLORS[d.cat]+'18')
+    .attr('stroke', d=>d.hero ? '#0f172a' : COLORS[d.cat])
+    .attr('stroke-width', d=>d.hero ? 0 : d.cat==='identity' ? 2.5 : 1.5)
     .attr('filter','url(#shadow)');
+
+  // Hero outer glow ring
+  node.filter(d=>d.hero)
+    .append('circle')
+    .attr('r', d=>d.r+6)
+    .attr('fill','none')
+    .attr('stroke','#d97706')
+    .attr('stroke-width',2)
+    .attr('opacity',0.5);
 
   // Transferable dashed outer ring
   node.filter(d=>d.transferable)
@@ -375,14 +384,14 @@ function initGraph() {
       else cur=(cur+' '+w).trim();
     }
     if(cur) lines.push(cur);
-    const fs = d.r>=26?9:d.r>=18?8:d.r>=14?7:6.5;
+    const fs = d.hero?12:d.r>=26?9:d.r>=18?8:d.r>=14?7:6.5;
     const lh = fs+2.5;
     const yStart = -(lines.length-1)*lh/2;
     const sel = d3.select(this);
     lines.forEach((line,i) => {
       sel.append('text')
         .attr('text-anchor','middle').attr('y', yStart+i*lh)
-        .attr('fill', d.cat==='identity'?'#1e293b':'#334155')
+        .attr('fill', d.hero ? '#ffffff' : d.cat==='identity' ? '#1e293b' : '#334155')
         .attr('font-size',fs+'px').attr('font-weight',d.cat==='identity'?'700':'500')
         .attr('font-family','Inter, system-ui, sans-serif')
         .attr('pointer-events','none').attr('dominant-baseline','middle')
