@@ -74,6 +74,38 @@
       background: rgba(255,255,255,0.96); border: 1px solid #e2e8f0;
       border-radius: 10px; padding: 0.75rem 1rem; max-width: 200px;
     }
+
+    /* ── HOW TO READ ── */
+    #how-to-read {
+      position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
+      z-index: 25;
+      background: #fff; border: 1px solid #e2e8f0;
+      border-radius: 12px; padding: 1rem 1.25rem;
+      max-width: 480px; width: calc(100vw - 2rem);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    #how-to-read.hidden {
+      opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(-8px);
+    }
+    .htr-title {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: #1d4ed8; margin-bottom: 0.6rem;
+    }
+    .htr-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .htr-item { display: flex; align-items: flex-start; gap: 0.4rem; font-size: 0.75rem; color: #334155; line-height: 1.4; }
+    .htr-icon { font-size: 0.9rem; flex-shrink: 0; margin-top: 0.05rem; }
+    .htr-close {
+      display: block; width: 100%; text-align: center;
+      font-size: 0.72rem; font-weight: 600; color: #94a3b8;
+      border: 1px solid #e2e8f0; border-radius: 6px;
+      padding: 0.3rem; cursor: pointer; background: none;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .htr-close:hover { color: #1d4ed8; border-color: #1d4ed8; }
     .arc-title { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 0.4rem; }
     .arc-row { display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; color: #334155; margin-bottom: 0.2rem; }
     .arc-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
@@ -143,6 +175,20 @@
   <div class="arc-row"><div class="arc-dot" style="background:#1d4ed8"></div>Research PhD (2020–2026)</div>
   <div class="arc-row"><div class="arc-dot" style="background:#b45309"></div>Industry (2026→)</div>
   <div class="arc-hint">Dashed-ring nodes = skills that cross all three contexts</div>
+</div>
+
+<!-- HOW TO READ -->
+<div id="how-to-read">
+  <div class="htr-title">How to read this map</div>
+  <div class="htr-grid">
+    <div class="htr-item"><span class="htr-icon">⭕</span><span><strong>Each circle</strong> is a skill, trait, or experience</span></div>
+    <div class="htr-item"><span class="htr-icon">📏</span><span><strong>Bigger circle</strong> = more central to who I am</span></div>
+    <div class="htr-item"><span class="htr-icon">〰️</span><span><strong>Lines between circles</strong> = real connections between those things</span></div>
+    <div class="htr-item"><span class="htr-icon">🔵</span><span><strong>Color</strong> = category (see legend, bottom left)</span></div>
+    <div class="htr-item"><span class="htr-icon">⬡</span><span><strong>Dashed ring</strong> = skill I've used in both industry and research</span></div>
+    <div class="htr-item"><span class="htr-icon">🖱️</span><span><strong>Hover any node</strong> to read the story behind it</span></div>
+  </div>
+  <button class="htr-close" onclick="document.getElementById('how-to-read').classList.add('hidden')">Got it — hide this</button>
 </div>
 
 <div id="tooltip">
