@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5X3FQYGJSR"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-5X3FQYGJSR');
-</script>
-
   
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5X3FQYGJSR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-5X3FQYGJSR');
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aakriti Barat — Skills &amp; Identity Map</title>
@@ -146,10 +144,10 @@
 <div id="header">
   <div>
     <h1>Aakriti <span>Barat</span> — Skills &amp; Identity Map</h1>
-    <p>Drag · Hover · Filter by category</p>
+    <p>Showing: Who I am as a person · Click <strong>All</strong> to see full technical map · Drag &amp; hover to explore</p>
   </div>
   <div id="filters">
-    <button class="filter-btn active" data-cat="all">All</button>
+    <button class="filter-btn" data-cat="all">All</button>
     <button class="filter-btn" data-cat="identity">Identity</button>
     <button class="filter-btn" data-cat="security">Security</button>
     <button class="filter-btn" data-cat="hardware">Hardware</button>
@@ -504,21 +502,35 @@ function initGraph() {
     node.attr('transform',d=>`translate(${d.x},${d.y})`);
   });
 
-  // Category filter buttons
-  let activeFilter = 'all';
+  // Filter logic — 'intro' shows Identity+Human+Creative for non-technical visitors
+  const INTRO_CATS = new Set(['identity','human','creative']);
+
+  function applyFilter(cat) {
+    node.style('opacity', d => {
+      if(cat === 'all') return 1;
+      if(cat === 'intro') return INTRO_CATS.has(d.cat) ? 1 : 0.06;
+      return d.cat === cat ? 1 : 0.06;
+    });
+    link.style('opacity', d => {
+      if(cat === 'all') return 1;
+      const sc = typeof d.source==='object' ? d.source.cat : nodes.find(n=>n.id===d.source)?.cat;
+      const tc = typeof d.target==='object' ? d.target.cat : nodes.find(n=>n.id===d.target)?.cat;
+      if(cat === 'intro') return (INTRO_CATS.has(sc) && INTRO_CATS.has(tc)) ? 0.7 : 0.03;
+      return (sc===cat || tc===cat) ? 0.8 : 0.03;
+    });
+  }
+
+  // Default on load: show Identity + Human + Creative (readable for non-technical visitors)
+  let activeFilter = 'intro';
+  applyFilter('intro');
+  document.querySelector('.filter-btn[data-cat="identity"]').classList.add('active');
+
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
       this.classList.add('active');
       activeFilter = this.dataset.cat;
-      const fade = activeFilter === 'all' ? 1 : 0.08;
-      node.style('opacity', d => activeFilter==='all' || d.cat===activeFilter ? 1 : fade);
-      link.style('opacity', d => {
-        if(activeFilter==='all') return 1;
-        const sc = typeof d.source==='object'?d.source.cat:nodes.find(n=>n.id===d.source)?.cat;
-        const tc = typeof d.target==='object'?d.target.cat:nodes.find(n=>n.id===d.target)?.cat;
-        return sc===activeFilter||tc===activeFilter ? 0.8 : 0.04;
-      });
+      applyFilter(activeFilter);
     });
   });
 
