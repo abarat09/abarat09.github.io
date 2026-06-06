@@ -73,6 +73,19 @@
       font-style: italic;
     }
 
+    .contact-form { display:flex; flex-direction:column; gap:0.75rem; max-width:480px; margin:0 auto 1.5rem; }
+    .contact-form input, .contact-form textarea {
+      width:100%; padding:0.65rem 1rem; border:1px solid var(--border);
+      border-radius:8px; font-family:inherit; font-size:0.9rem;
+      color:var(--text); background:var(--white);
+      transition:border-color 0.15s;
+    }
+    .contact-form input:focus, .contact-form textarea:focus {
+      outline:none; border-color:var(--accent);
+    }
+    .contact-form textarea { resize:vertical; min-height:110px; }
+    .contact-actions { display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap; }
+
     :root {
       --white:   #ffffff;
       --bg:      #f8fafc;
@@ -479,11 +492,12 @@
         <a class="btn btn-primary" href="#research">View Research</a>
         <a class="btn btn-ghost" href="https://www.linkedin.com/in/aakritibarat" target="_blank" rel="noopener">LinkedIn</a>
         <a class="btn btn-ghost" href="#contact">Contact</a>
+        <a class="btn btn-ghost" href="Barat_Aakriti_CV.pdf" download>↓ Download CV</a>
       </div>
-      <p class="hero-now">📍Currently: Finishing PhD · Presenting at IEEE MWSCAS and GLSVLSI 2026 · Open to roles from Fall 2026 · Resume available on request </p>
+      <p class="hero-now">📍 Currently: Finishing PhD · Presenting at IEEE MWSCAS and GLSVLSI 2026 · Open to roles from Fall 2026</p>
       <div class="hero-stats">
         <div>
-          <div class="stat-num">4<span>+</span></div>
+          <div class="stat-num">3<span>+</span></div>
           <div class="stat-label">IEEE / ACM Publications</div>
         </div>
         <div>
@@ -596,7 +610,7 @@
       <div class="arc-arrow">→</div>
       <div class="arc-step">
         <div class="arc-num">04</div>
-        <div class="arc-label">Root of Trust System Framework<br><span>ICCE 2026</span></div>
+        <div class="arc-label">System Framework<br><span>Preprint 2026</span></div>
       </div>
     </div>
 
@@ -621,17 +635,6 @@
       <p class="paper-hook">What if device aging could double as a security primitive? This paper answers that.</p>
       <p>Demonstrated that <strong>Current Transient Spectroscopy (CTS)</strong> can function as a silicon-level authentication and aging diagnostic mechanism by extracting charge-trap kinetics as process-specific device signatures. Built Python and MATLAB pipelines with Bayesian signal processing to turn <strong>device-level physics into deployable security and reliability primitives</strong>.</p>
     </div>
-  
-  <div class="paper">
-    <div class="paper-top">
-      <span class="paper-badge ieee">IEEE · ICCE 2026</span>
-      <span class="yr">2026</span>
-      <span class="role-badge">First Author</span>
-    </div>
-    <h3><a href="https://doi.org/10.1109/ICCE67443.2026.11449811" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">A PUF-Based Security Framework for Fault and Intrusion Detection</a></h3>
-    <p class="paper-hook">PUF authentication doesn't stop at chip identity — this paper puts it to work detecting hardware attacks in real time.</p>
-    <p>Developed a <strong>PUF-based root-of-trust framework</strong> that extends IC authentication into real-time fault and intrusion detection for industrial control systems. Bridges silicon-level chip identity with system-level operational monitoring — applicable to securing factory automation, embedded safety systems, and AI inference hardware against tampering and supply-chain attacks.</p>
-  </div>
 
     <div class="paper">
       <div class="paper-top">
@@ -657,7 +660,7 @@
 
     <div class="paper">
       <div class="paper-top">
-        <span class="paper-badge acm">IEEE · ICCE2026</span>
+        <span class="paper-badge acm">Preprint · 2026</span>
         <span class="yr">2026</span>
         <span class="role-badge">Peer Reviewed</span>
       </div>
@@ -955,8 +958,21 @@
     <div class="contact-inner">
       <p class="section-eyebrow">Contact</p>
       <h2 class="section-title">Let's Connect</h2>
-      <p class="contact-desc">I'm actively exploring hardware security and silicon engineering roles for Fall 2026. If you're working on secure semiconductors, root-of-trust architectures, or supply-chain integrity — I'd love to talk.</p>
-      <div class="contact-buttons">
+      <p class="contact-desc">
+        I'm actively exploring hardware security and silicon engineering roles for
+        Fall 2026. If you're working on secure semiconductors, root-of-trust
+        architectures, or supply-chain integrity — I'd love to talk.
+      </p>
+
+      <form action="https://formspree.io/f/maqzewgq" method="POST" class="contact-form">
+        <input type="text" name="name" placeholder="Your name" required>
+        <input type="email" name="email" placeholder="Your email" required>
+        <textarea name="message" placeholder="Message" rows="4" required></textarea>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+      </form>
+
+      <div class="contact-actions">
+        <a class="btn btn-ghost" href="https://calendly.com/aakritibarat/meeting-with-aakriti-barat" target="_blank" rel="noopener">📅 Schedule a 15-min Call</a>
         <a class="btn btn-ghost" href="https://www.linkedin.com/in/aakritibarat" target="_blank" rel="noopener">LinkedIn Profile</a>
       </div>
     </div>
@@ -964,7 +980,7 @@
 </section>
 
 <footer>
-  <p>© 2026 Aakriti Barat · Hardware Security Researcher · PhD Candidate, Electrical Engineering · <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" style="color:inherit;opacity:0.6;">Privacy</a></p>
+  <p>© 2026 Aakriti Barat &nbsp;·&nbsp; Hardware Security Researcher &nbsp;·&nbsp; PhD Candidate, Electrical Engineering</p>
 </footer>
 
 </body>
