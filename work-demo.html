@@ -100,6 +100,211 @@
       font-size:.92rem;
       margin-top:8px;
     }
+    .bit-row-wrap{
+      display:grid;
+      grid-template-columns:minmax(0, 1fr) 240px;
+      gap:14px;
+      align-items:start;
+    }
+    .bit-side{
+      display:grid;
+      gap:12px;
+      align-content:start;
+    }
+    /* ── BLOCK DIAGRAM COMPARATOR ── */
+    .comparator-mini{
+      border:1px solid rgba(173, 205, 255, .12);
+      border-radius:16px;
+      padding:18px 14px 14px;
+      background:rgba(8, 16, 31, .52);
+    }
+    .comparator-mini .title{
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      color:var(--accent3);
+      margin-bottom:14px;
+      text-align:center;
+    }
+    /* Wire row: label — wire — box — wire — label */
+    .comparator-row{
+      display:flex;
+      align-items:center;
+      gap:0;
+      margin-bottom:12px;
+    }
+    /* Input/output signal labels */
+    .comp-sig{
+      font-size:1rem;
+      font-weight:800;
+      min-width:28px;
+      text-align:center;
+      flex-shrink:0;
+      line-height:1;
+    }
+    .comp-sig.sig-0{ color:#54d6c8; }
+    .comp-sig.sig-1{ color:#ffd166; }
+    /* Horizontal wires */
+    .comp-wire{
+      flex:1;
+      height:2px;
+      background:rgba(173, 205, 255, .35);
+      position:relative;
+    }
+    /* Arrow tip on right wire */
+    .comp-wire.right::after{
+      content:"";
+      position:absolute;
+      right:-1px; top:50%;
+      transform:translateY(-50%);
+      width:0; height:0;
+      border-top:5px solid transparent;
+      border-bottom:5px solid transparent;
+      border-left:7px solid rgba(173, 205, 255, .5);
+    }
+    /* The central box */
+    .comp-box{
+      flex-shrink:0;
+      width:110px;
+      padding:10px 8px;
+      border:1.5px solid rgba(173, 205, 255, .35);
+      border-radius:6px;
+      background:rgba(13, 28, 52, .95);
+      text-align:center;
+    }
+    .comp-box-label{
+      font-size:.82rem;
+      font-weight:800;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      color:var(--text);
+      line-height:1.3;
+    }
+    .comp-box-sub{
+      font-size:.62rem;
+      color:var(--muted);
+      margin-top:3px;
+      letter-spacing:.04em;
+    }
+    /* Side port labels (below the wire endpoints) */
+    .comp-port-wrap{
+      display:flex;
+      justify-content:space-between;
+      padding:0 4px;
+      margin-bottom:10px;
+    }
+    .comp-port{
+      font-size:.62rem;
+      text-transform:uppercase;
+      letter-spacing:.1em;
+      color:var(--muted);
+      text-align:center;
+    }
+    .comparator-mini .rule{
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      font-size:.78rem;
+      color:var(--muted);
+      padding:3px 0;
+      border-top:1px solid rgba(173,205,255,.07);
+    }
+    .comparator-mini .rule:first-of-type{ border-top:none; }
+    .comparator-mini .rule strong{color:var(--text)}
+    .flow-strip{margin:14px 0 0;}
+    .flow-visual{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:8px;
+      align-items:stretch;
+    }
+    .flow-node{
+      display:grid;
+      place-items:center;
+      gap:8px;
+      min-height:unset;
+      padding:12px 14px;
+      border:1px solid rgba(173, 205, 255, .12);
+      border-radius:18px;
+      background:rgba(8, 16, 31, .52);
+      text-align:center;
+    }
+    .flow-node.rule{background:linear-gradient(180deg, rgba(255, 209, 102, .12), rgba(8, 16, 31, .52));}
+    .flow-node.output{background:linear-gradient(180deg, rgba(84, 214, 200, .10), rgba(8, 16, 31, .52));}
+    .flow-arrow{
+      display:grid;
+      place-items:center;
+      color:var(--accent3);
+      font-size:1rem;
+      font-weight:700;
+      opacity:.8;
+      line-height:1;
+      height:12px;
+    }
+    .glyph{width:100%; height:28px; position:relative; max-width:180px;}
+    .glyph-wave::before{
+      content:"";
+      position:absolute;
+      inset:14px 10px;
+      border-top:2px solid rgba(84, 214, 200, .4);
+      border-bottom:2px solid rgba(84, 214, 200, .18);
+      transform:skewX(-20deg);
+      border-radius:999px;
+    }
+    .glyph-wave::after{
+      content:"";
+      position:absolute;
+      left:10px; right:10px; top:9px; height:16px;
+      background:
+        radial-gradient(circle at 10% 50%, var(--accent2) 0 3px, transparent 4px),
+        radial-gradient(circle at 35% 50%, var(--accent2) 0 3px, transparent 4px),
+        radial-gradient(circle at 60% 50%, var(--accent2) 0 3px, transparent 4px),
+        radial-gradient(circle at 85% 50%, var(--accent2) 0 3px, transparent 4px);
+      opacity:.95;
+    }
+    .glyph-threshold::before{
+      content:"";
+      position:absolute;
+      left:8px; right:8px; top:17px;
+      height:2px;
+      background:rgba(255, 209, 102, .88);
+      box-shadow:0 0 0 1px rgba(255, 209, 102, .12);
+    }
+    .glyph-threshold::after{
+      content:"";
+      position:absolute;
+      left:50%; top:8px;
+      width:14px; height:14px;
+      margin-left:-7px;
+      border-radius:50%;
+      background:linear-gradient(180deg,#ffd166,#ff8b4c);
+      box-shadow:0 0 0 4px rgba(255, 209, 102, .12);
+    }
+    .glyph-bits{
+      display:grid;
+      grid-template-columns:repeat(8, 1fr);
+      gap:4px;
+      align-content:center;
+    }
+    .glyph-bits span{
+      aspect-ratio:1;
+      border-radius:5px;
+      display:block;
+    }
+    .glyph-bits span:nth-child(odd){background:linear-gradient(180deg,#ffd166,#ff8b4c);}
+    .glyph-bits span:nth-child(even){background:linear-gradient(180deg,#64d7c9,#2e8fb7);}
+    .flow-cap{
+      color:var(--text);
+      font-weight:700;
+      letter-spacing:-0.01em;
+      font-size:.84rem;
+    }
+    .flow-mini{
+      color:var(--muted);
+      font-size:.68rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
     .grid{
       display:grid;
       grid-template-columns: 320px minmax(0, 1fr);
@@ -340,6 +545,8 @@
       font-size:.86rem;
     }
     @media (max-width: 1080px){
+      .flow-visual{grid-template-columns:1fr}
+      .flow-arrow{display:none}
       .hero,.grid,.chart-grid,.comparison-grid,.aging-grid,.step-grid,.result-grid{grid-template-columns:1fr}
       .controls{position:static}
       .bits{grid-template-columns:repeat(8, minmax(0, 1fr))}
@@ -351,50 +558,6 @@
       .result-grid{grid-template-columns:1fr}
       .bits{grid-template-columns:repeat(8, minmax(0, 1fr))}
     }
-    
-       .threshold-visual{
-      margin-top:16px;
-      padding:14px;
-      border:1px solid rgba(173, 205, 255, .12);
-      border-radius:18px;
-      background:linear-gradient(180deg, rgba(4, 10, 21, .55), rgba(8, 15, 29, .28));
-    }
-    .threshold-label{
-      font-size:.8rem;
-      color:var(--accent3);
-      margin-bottom:10px;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-    }
-    .threshold-line{
-      height:2px;
-      background:rgba(255, 209, 102, .9);
-      margin:18px 0;
-      position:relative;
-    }
-    .bit-row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-    .bit-dot{
-      width:34px;
-      height:34px;
-      border-radius:50%;
-      display:inline-grid;
-      place-items:center;
-      font-size:.75rem;
-      font-weight:700;
-      color:#08111f;
-    }
-    .bit-dot.one{ background:linear-gradient(180deg,#ffd166,#ff8b4c); }
-    .bit-dot.zero{ background:linear-gradient(180deg,#64d7c9,#2e8fb7); }
-    .threshold-note{
-      margin-top:10px;
-      font-size:.84rem;
-      color:var(--muted);
-    } 
   </style>
 </head>
 <body>
@@ -427,7 +590,7 @@
       <aside class="panel controls">
         <div class="control-group">
           <div class="control">
-            <label for="family"><span>Family</span><span id="familyTag">CD4069</span></label>
+            <label for="family"><span>Family</span><span id="familyTag">Commercial Chip A</span></label>
             <select id="family">
               <optgroup label="PDK / TCAD">
                 <option value="22nm">22 nm</option>
@@ -435,17 +598,17 @@
                 <option value="ncsu_45nm">45 nm NCSU</option>
               </optgroup>
               <optgroup label="Hardware">
-                <option value="CD4069" selected>CD4069</option>
-                <option value="SN74HC04">SN74HC04</option>
+                <option value="CD4069" selected>Commercial Chip A</option>
+                <option value="SN74HC04">Commercial Chip B</option>
               </optgroup>
             </select>
           </div>
         </div>
         <div class="mini-stats">
           <div class="metric">
-            <div class="label">Decision line</div>
+            <div class="label">Threshold rule</div>
             <div class="value" id="thresholdValue">-5.93 dB</div>
-            <div class="sub">Where the response flips</div>
+            <div class="sub">Below = 0, above = 1</div>
           </div>
           <div class="metric">
             <div class="label">Response</div>
@@ -481,9 +644,6 @@
             </div>
             <canvas id="thdCanvas" width="900" height="360"></canvas>
           </div>
-          <div class="threshold-note">
-            Below threshold = 0. Above threshold = 1.
-          </div>
         </section>
 
         <section class="panel bit-card">
@@ -491,28 +651,55 @@
             <h2>64-bit response</h2>
             <span id="bitCaption">Selected chip response</span>
           </div>
-          <div class="bits" id="bitGrid"></div>
-          <div class="legend">
-            <span class="chip"><span class="swatch" style="background:linear-gradient(180deg,#ffd166,#ff8b4c)"></span>1 = THD above threshold</span>
-            <span class="chip"><span class="swatch" style="background:linear-gradient(180deg,#64d7c9,#2e8fb7)"></span>0 = THD below threshold</span>
-            <span class="chip"><span class="swatch" style="background:linear-gradient(180deg,#edf3ff,#edf3ff)"></span>Private implementation stays hidden</span>
-          </div>
+          <div class="bit-row-wrap">
+            <div>
+              <div class="bits" id="bitGrid"></div>
 
-          <div class="threshold-visual">
-          <div class="threshold-label">Threshold</div>
-          <div class="threshold-line"></div>
-          <div class="bit-row">
-            <span class="bit-dot zero">0</span>
-            <span class="bit-dot zero">0</span>
-            <span class="bit-dot one">1</span>
-            <span class="bit-dot zero">0</span>
-            <span class="bit-dot one">1</span>
-            <span class="bit-dot one">1</span>
-            <span class="bit-dot zero">0</span>
-            <span class="bit-dot one">1</span>
+              <!-- Legend moved below DAC figure — colour key only -->
+              <div class="legend" style="margin-top:10px;">
+                <span class="chip"><span class="swatch" style="background:linear-gradient(180deg,#ffd166,#ff8b4c)"></span>1 = above threshold</span>
+                <span class="chip"><span class="swatch" style="background:linear-gradient(180deg,#64d7c9,#2e8fb7)"></span>0 = below threshold</span>
+              </div>
+
+              <!-- Industry note replaces "Private implementation stays hidden" -->
+              <p style="font-size:.75rem; color:var(--muted); margin-top:10px; line-height:1.6; max-width:420px;">
+                <strong style="color:var(--text);">On a real chip:</strong> these bits never leave the die.
+                They feed on-chip into a fuzzy extractor and Key Derivation Function (KDF),
+                producing a cryptographic key consumed internally.
+                The outside world sees only a signed attestation or challenge-response —
+                never the raw PUF response. This is how
+                <span style="color:var(--accent2);">Intrinsic ID BroadKey</span> and
+                <span style="color:var(--accent2);">Rambus CryptoManager</span> work in production silicon.
+              </p>
+            </div>
+
+            <div class="bit-side">
+              <div class="comparator-mini">
+                <div class="title">DAC threshold</div>
+
+                <!-- Block diagram row: 0 ──── [ DAC ] ──── 1 -->
+                <div class="comparator-row">
+                  <span class="comp-sig sig-0">0</span>
+                  <div class="comp-wire"></div>
+                  <div class="comp-box">
+                    <div class="comp-box-label">DAC</div>
+                    <div class="comp-box-sub">sets threshold value</div>
+                  </div>
+                  <div class="comp-wire right"></div>
+                  <span class="comp-sig sig-1">1</span>
+                </div>
+
+                <!-- Port labels beneath wire ends -->
+                <div class="comp-port-wrap">
+                  <span class="comp-port">below</span>
+                  <span class="comp-port">above</span>
+                </div>
+
+                <div class="rule"><strong>Below threshold</strong><span style="color:#54d6c8">0</span></div>
+                <div class="rule"><strong>Above threshold</strong><span style="color:#ffd166">1</span></div>
+              </div>
+            </div>
           </div>
-          <div class="threshold-note">Above the line = 1, below the line = 0</div>
-        </div>
         </section>
 
         <section class="panel">
@@ -523,7 +710,7 @@
           <div class="result-grid">
             <div class="result-card">
               <div class="kicker">Fingerprint</div>
-              <div class="big" id="processText">CD4069 looks different from SN74HC04.</div>
+              <div class="big" id="processText">Commercial Chip A looks different from Commercial Chip B.</div>
               <div class="small">Each family leaves its own curve.</div>
             </div>
             <div class="result-card">
@@ -1026,11 +1213,5 @@
     el.age.value = "0";
     syncState();
   </script>
-
-  <footer class="demo-legal">
-  <p>For licensed use or citation requests, contact Aakriti Barat and cite using ORCID: <a href="https://orcid.org/0009-0009-1558-4014" target="_blank" rel="noopener">0009-0009-1558-4014</a>.</p>
-</footer>
-  
 </body>
 </html>
-
