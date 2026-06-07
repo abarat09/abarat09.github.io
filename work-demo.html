@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IFM Demo Visualizer</title>
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg2:#0d1a2f;
+      --panel:rgba(12, 21, 39, .76);
+      --panel-strong:rgba(13, 28, 52, .92);
+      --line:rgba(177, 206, 255, .18);
+      --text:#edf3ff;
+      --muted:#9ab0d1;
+      --accent:#ff8b4c;
+      --accent2:#54d6c8;
+      --accent3:#ffd166;
+      --shadow:0 24px 70px rgba(0,0,0,.35);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      font:16px/1.45 "Trebuchet MS","Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255, 139, 76, .18), transparent 30%),
+        radial-gradient(circle at top right, rgba(84, 214, 200, .16), transparent 28%),
+        linear-gradient(160deg, var(--bg), var(--bg2) 72%);
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size:38px 38px;
+      mask-image:radial-gradient(circle at center, rgba(0,0,0,.95), transparent 80%);
+      opacity:.4;
+    }
+    .shell{
+      width:min(1280px, calc(100vw - 32px));
+      margin:0 auto;
+      padding:28px 0 36px;
+      position:relative;
+      z-index:1;
+    }
+    .hero{
+      display:grid;
+      gap:18px;
+      grid-template-columns: 1.5fr .95fr;
+      align-items:stretch;
+      margin-bottom:18px;
+    }
+    .hero-card,.panel,.metric,.step{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(173, 205, 255, .14);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(14px);
+      border-radius:var(--radius);
+    }
+    .hero-card{
+      padding:26px 26px 22px;
+      background:
+        radial-gradient(circle at top right, rgba(255, 139, 76, .18), transparent 35%),
+        linear-gradient(180deg, rgba(14, 26, 48, .96), rgba(8, 15, 29, .88));
+    }
+    .eyebrow{
+      text-transform:uppercase;
+      letter-spacing:.22em;
+      color:var(--accent3);
+      font-size:.75rem;
+      margin-bottom:14px;
+    }
+    h1{
+      margin:0 0 10px;
+      font:700 clamp(2rem, 4vw, 3.8rem)/1.02 Georgia, "Times New Roman", serif;
+      max-width:12ch;
+    }
+    .hero p{
+      margin:0;
+      max-width:68ch;
+      color:var(--muted);
+    }
+    .hero-side{
+      display:grid;
+      gap:18px;
+      align-content:stretch;
+    }
+    .panel{
+      padding:18px;
+      background:linear-gradient(180deg, rgba(13, 28, 52, .94), rgba(9, 18, 35, .86));
+    }
+    .note{
+      color:var(--muted);
+      font-size:.92rem;
+      margin-top:8px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap:18px;
+      align-items:start;
+    }
+    .controls{
+      position:sticky;
+      top:18px;
+    }
+    .control-group{
+      display:grid;
+      gap:14px;
+    }
+    .control{
+      display:grid;
+      gap:8px;
+    }
+    .control label{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      color:var(--muted);
+      font-size:.88rem;
+    }
+    select,input[type="range"]{
+      width:100%;
+    }
+    select{
+      border:1px solid rgba(173, 205, 255, .16);
+      border-radius:14px;
+      padding:12px 14px;
+      color:var(--text);
+      background:#0a1528;
+    }
+    input[type="range"]{
+      accent-color:var(--accent);
+    }
+    .mini-stats{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin-top:16px;
+    }
+    .metric{
+      padding:14px 14px 12px;
+      background:rgba(8, 16, 31, .72);
+    }
+    .metric .label{
+      color:var(--muted);
+      font-size:.8rem;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:8px;
+    }
+    .metric .value{
+      font:700 1.18rem/1.1 Georgia, "Times New Roman", serif;
+    }
+    .metric .sub{
+      color:var(--muted);
+      font-size:.82rem;
+      margin-top:6px;
+    }
+    .content{
+      display:grid;
+      gap:18px;
+    }
+    .chart-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:18px;
+    }
+    .comparison-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:18px;
+    }
+    .aging-grid{
+      display:grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap:18px;
+      align-items:stretch;
+    }
+    .chart-card{
+      padding:18px;
+      min-height:320px;
+    }
+    .chart-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .chart-head h2{
+      margin:0;
+      font:700 1.05rem/1.1 Georgia, "Times New Roman", serif;
+    }
+    .chart-head span{
+      color:var(--muted);
+      font-size:.85rem;
+    }
+    canvas{
+      width:100%;
+      height:240px;
+      display:block;
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(4, 10, 21, .78), rgba(8, 15, 29, .42));
+      border:1px solid rgba(173, 205, 255, .12);
+    }
+    .bit-card{
+      padding:18px;
+    }
+    .bits{
+      display:grid;
+      grid-template-columns:repeat(16, minmax(0, 1fr));
+      gap:6px;
+      margin-top:14px;
+    }
+    .bit{
+      aspect-ratio:1;
+      border-radius:10px;
+      display:grid;
+      place-items:center;
+      font-size:.72rem;
+      font-weight:700;
+      border:1px solid rgba(255,255,255,.08);
+      color:#08111f;
+      transition:transform .18s ease, box-shadow .18s ease;
+    }
+    .bit.on{
+      background:linear-gradient(180deg, #ffd166, #ff8b4c);
+      box-shadow:0 10px 24px rgba(255, 139, 76, .24);
+    }
+    .bit.off{
+      background:linear-gradient(180deg, #64d7c9, #2e8fb7);
+      box-shadow:0 10px 24px rgba(84, 214, 200, .18);
+    }
+    .bit:hover{
+      transform:translateY(-2px);
+    }
+    .legend{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px 16px;
+      margin-top:14px;
+      color:var(--muted);
+      font-size:.88rem;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .swatch{
+      width:12px;
+      height:12px;
+      border-radius:999px;
+      display:inline-block;
+    }
+    .step-grid{
+      display:grid;
+      grid-template-columns:repeat(5, minmax(0, 1fr));
+      gap:12px;
+    }
+    .step{
+      padding:16px;
+      min-height:118px;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    }
+    .step .num{
+      color:var(--accent3);
+      font-size:.8rem;
+      text-transform:uppercase;
+      letter-spacing:.15em;
+      margin-bottom:10px;
+    }
+    .step .name{
+      font:700 1rem/1.15 Georgia, "Times New Roman", serif;
+      margin-bottom:8px;
+    }
+    .step .desc{
+      color:var(--muted);
+      font-size:.88rem;
+    }
+    .footer-note{
+      color:var(--muted);
+      margin-top:2px;
+      font-size:.86rem;
+    }
+    .result-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+    .result-card{
+      padding:16px;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid rgba(173, 205, 255, .14);
+      border-radius:18px;
+      min-height:126px;
+    }
+    .result-card .kicker{
+      color:var(--accent3);
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      font-size:.72rem;
+      margin-bottom:10px;
+    }
+    .result-card .big{
+      font:700 1.18rem/1.08 Georgia, "Times New Roman", serif;
+      margin-bottom:8px;
+    }
+    .result-card .small{
+      color:var(--muted);
+      font-size:.86rem;
+    }
+    .age-readout{
+      display:grid;
+      gap:12px;
+    }
+    .age-pill{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:12px 14px;
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(173, 205, 255, .12);
+      color:var(--text);
+    }
+    .age-pill strong{
+      font:700 1.05rem/1.1 Georgia, "Times New Roman", serif;
+    }
+    .age-pill span{
+      color:var(--muted);
+      font-size:.86rem;
+    }
+    @media (max-width: 1080px){
+      .hero,.grid,.chart-grid,.comparison-grid,.aging-grid,.step-grid,.result-grid{grid-template-columns:1fr}
+      .controls{position:static}
+      .bits{grid-template-columns:repeat(8, minmax(0, 1fr))}
+    }
+    @media (max-width: 620px){
+      .shell{width:min(100vw - 18px, 1280px)}
+      .hero-card,.panel,.chart-card,.bit-card,.step{border-radius:18px}
+      .mini-stats{grid-template-columns:1fr}
+      .result-grid{grid-template-columns:1fr}
+      .bits{grid-template-columns:repeat(8, minmax(0, 1fr))}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">IFM fingerprint demo</div>
+        <h1>See a chip's fingerprint change.</h1>
+        <p>
+          Choose a chip family and watch its electrical fingerprint, bit pattern, and aging drift move together.
+        </p>
+      </div>
+      <div class="hero-side">
+        <div class="panel">
+          <strong>What to notice</strong>
+          <div class="note">
+            Different families separate. The same family stays close. Aging pushes the curve.
+          </div>
+        </div>
+        <div class="panel">
+          <strong>What it means</strong>
+          <div class="note">
+            This is the visual story of authentication, not the core IFM implementation.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <aside class="panel controls">
+        <div class="control-group">
+          <div class="control">
+            <label for="family"><span>Family</span><span id="familyTag">CD4069</span></label>
+            <select id="family">
+              <optgroup label="PDK / TCAD">
+                <option value="22nm">22 nm</option>
+                <option value="45nm">45 nm GPDK</option>
+                <option value="ncsu_45nm">45 nm NCSU</option>
+              </optgroup>
+              <optgroup label="Hardware">
+                <option value="CD4069" selected>CD4069</option>
+                <option value="SN74HC04">SN74HC04</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+        <div class="mini-stats">
+          <div class="metric">
+            <div class="label">Decision line</div>
+            <div class="value" id="thresholdValue">-5.93 dB</div>
+            <div class="sub">Where the response flips</div>
+          </div>
+          <div class="metric">
+            <div class="label">Response</div>
+            <div class="value" id="balanceValue">32 / 64</div>
+            <div class="sub">1s versus 0s</div>
+          </div>
+          <div class="metric">
+            <div class="label">Variation</div>
+            <div class="value" id="spreadValue">0.12 dB</div>
+            <div class="sub">How tightly it clusters</div>
+          </div>
+          <div class="metric">
+            <div class="label">Sweep window</div>
+            <div class="value" id="windowValue">1.00-4.00 V</div>
+            <div class="sub">Input range</div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="content">
+        <section class="chart-grid">
+          <div class="panel chart-card">
+            <div class="chart-head">
+              <h2>VTC view</h2>
+              <span>Bias sweep to output swing</span>
+            </div>
+            <canvas id="vtcCanvas" width="900" height="360"></canvas>
+          </div>
+          <div class="panel chart-card">
+            <div class="chart-head">
+              <h2>THD fingerprint</h2>
+              <span>Sampled against the family threshold</span>
+            </div>
+            <canvas id="thdCanvas" width="900" height="360"></canvas>
+          </div>
+        </section>
+
+        <section class="panel bit-card">
+          <div class="chart-head">
+            <h2>64-bit response</h2>
+            <span id="bitCaption">Selected chip response</span>
+          </div>
+          <div class="bits" id="bitGrid"></div>
+          <div class="legend">
+            <span class="chip"><span class="swatch" style="background:linear-gradient(180deg,#ffd166,#ff8b4c)"></span>1 = THD above threshold</span>
+            <span class="chip"><span class="swatch" style="background:linear-gradient(180deg,#64d7c9,#2e8fb7)"></span>0 = THD below threshold</span>
+            <span class="chip"><span class="swatch" style="background:linear-gradient(180deg,#edf3ff,#edf3ff)"></span>Private implementation stays hidden</span>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="chart-head">
+            <h2>What it shows</h2>
+            <span>One glance summary</span>
+          </div>
+          <div class="result-grid">
+            <div class="result-card">
+              <div class="kicker">Fingerprint</div>
+              <div class="big" id="processText">CD4069 looks different from SN74HC04.</div>
+              <div class="small">Each family leaves its own curve.</div>
+            </div>
+            <div class="result-card">
+              <div class="kicker">Unique</div>
+              <div class="big">About half the bits flip across devices</div>
+              <div class="small">That is the separation story in one picture.</div>
+            </div>
+            <div class="result-card">
+              <div class="kicker">Repeatable</div>
+              <div class="big">The same chip stays close to itself</div>
+              <div class="small">Good chips read the same way again.</div>
+            </div>
+            <div class="result-card">
+              <div class="kicker">Aging</div>
+              <div class="big">NBTI can shift the fingerprint over time</div>
+              <div class="small">That is why the aging view matters.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="chart-head">
+            <h2>Aging / NBTI</h2>
+            <span>Fresh chip versus stressed chip</span>
+          </div>
+          <div class="aging-grid">
+            <div class="age-readout">
+              <div class="control">
+                <label for="age"><span>Aging level</span><span id="ageTag">0%</span></label>
+                <input id="age" type="range" min="0" max="100" value="0">
+              </div>
+              <div class="age-pill">
+                <div>
+                  <strong>Fresh</strong><br>
+                  <span id="freshLabel">Baseline fingerprint</span>
+                </div>
+                <div id="freshScore">Stable</div>
+              </div>
+              <div class="age-pill">
+                <div>
+                  <strong>Aged</strong><br>
+                  <span id="agedLabel">Drifted fingerprint</span>
+                </div>
+                <div id="agedScore">Shifted</div>
+              </div>
+              <div class="age-pill">
+                <div>
+                  <strong>Drift</strong><br>
+                  <span>How far the fingerprint moved</span>
+                </div>
+                <div id="driftValue">0.00 dB</div>
+              </div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-head">
+                <h2>Fingerprint drift</h2>
+                <span>Green = fresh, orange = aged</span>
+              </div>
+              <canvas id="agingCanvas" width="1200" height="420"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <section class="comparison-grid">
+          <div class="panel chart-card">
+            <div class="chart-head">
+              <h2>Families apart</h2>
+              <span>Mean THD versus variation</span>
+            </div>
+            <canvas id="familyScatterCanvas" width="900" height="360"></canvas>
+          </div>
+          <div class="panel chart-card">
+            <div class="chart-head">
+              <h2>Harmonic signature</h2>
+              <span>HD3 versus HD2</span>
+            </div>
+            <canvas id="harmonicScatterCanvas" width="900" height="360"></canvas>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="chart-head">
+            <h2>The story</h2>
+            <span>Three quick steps</span>
+          </div>
+          <div class="step-grid">
+            <div class="step">
+              <div class="num">Step 1</div>
+              <div class="name">Pick a family</div>
+              <div class="desc">Choose a chip family or a PDK to compare.</div>
+            </div>
+            <div class="step">
+              <div class="num">Step 2</div>
+              <div class="name">Watch the curve</div>
+              <div class="desc">See the transfer curve and fingerprint update together.</div>
+            </div>
+            <div class="step">
+              <div class="num">Step 3</div>
+              <div class="name">See the result</div>
+              <div class="desc">Read the response, the family map, and the aging drift.</div>
+            </div>
+            <div class="step">
+              <div class="num">Step 4</div>
+              <div class="name">Compare chips</div>
+              <div class="desc">Separate one family from another at a glance.</div>
+            </div>
+            <div class="step">
+              <div class="num">Step 5</div>
+              <div class="name">Check aging</div>
+              <div class="desc">See how stress shifts the fingerprint over time.</div>
+            </div>
+          </div>
+          <div class="footer-note">
+            The page is designed to explain the idea quickly, with more detail available only if the viewer wants it.
+            This drift is what helps separate a genuine chip from a counterfeit or aged one.
+          </div>
+          <div class="footer-note" style="margin-top:10px;color:#ffd166;">
+            Proprietary research demo. Copyright &copy; 2026 Aakriti Barat. All rights reserved.
+            No part of this page or the underlying IFM concept may be copied, reused, reverse engineered, or redistributed without written permission.
+            For licensing or collaboration, contact the author and cite the work using the author ORCID.
+          </div>
+        </section>
+      </main>
+    </section>
+  </div>
+
+  <script src="demo-data.js"></script>
+  <script>
+    const DEMO_DATA = window.IFM_DEMO_DATA;
+    const state = {
+      family: "CD4069",
+      age: 0
+    };
+
+    const el = {
+      family: document.getElementById("family"),
+      age: document.getElementById("age"),
+      familyTag: document.getElementById("familyTag"),
+      ageTag: document.getElementById("ageTag"),
+      thresholdValue: document.getElementById("thresholdValue"),
+      balanceValue: document.getElementById("balanceValue"),
+      spreadValue: document.getElementById("spreadValue"),
+      windowValue: document.getElementById("windowValue"),
+      processText: document.getElementById("processText"),
+      bitCaption: document.getElementById("bitCaption"),
+      bitGrid: document.getElementById("bitGrid"),
+      freshLabel: document.getElementById("freshLabel"),
+      agedLabel: document.getElementById("agedLabel"),
+      freshScore: document.getElementById("freshScore"),
+      agedScore: document.getElementById("agedScore"),
+      driftValue: document.getElementById("driftValue"),
+      vtcCanvas: document.getElementById("vtcCanvas"),
+      thdCanvas: document.getElementById("thdCanvas"),
+      agingCanvas: document.getElementById("agingCanvas"),
+      familyScatterCanvas: document.getElementById("familyScatterCanvas"),
+      harmonicScatterCanvas: document.getElementById("harmonicScatterCanvas")
+    };
+
+    const bitCells = [];
+    for (let i = 0; i < 64; i++) {
+      const cell = document.createElement("div");
+      cell.className = "bit off";
+      cell.textContent = "0";
+      el.bitGrid.appendChild(cell);
+      bitCells.push(cell);
+    }
+
+    function toPoints(list) {
+      return list.map(([x, y]) => ({ x, y }));
+    }
+
+    function blendPoints(fresh, aged, ratio) {
+      return fresh.map((point, index) => ({
+        x: point[0],
+        y: point[1] + (aged[index][1] - point[1]) * ratio
+      }));
+    }
+
+    function drawAxes(ctx, width, height, pad) {
+      ctx.save();
+      ctx.strokeStyle = "rgba(173, 205, 255, .22)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(pad.left, pad.top);
+      ctx.lineTo(pad.left, height - pad.bottom);
+      ctx.lineTo(width - pad.right, height - pad.bottom);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawGrid(ctx, width, height, pad, xTicks, yTicks) {
+      ctx.save();
+      ctx.strokeStyle = "rgba(173, 205, 255, .08)";
+      ctx.lineWidth = 1;
+      for (let i = 1; i < xTicks; i++) {
+        const x = pad.left + (width - pad.left - pad.right) * i / xTicks;
+        ctx.beginPath();
+        ctx.moveTo(x, pad.top);
+        ctx.lineTo(x, height - pad.bottom);
+        ctx.stroke();
+      }
+      for (let i = 1; i < yTicks; i++) {
+        const y = pad.top + (height - pad.top - pad.bottom) * i / yTicks;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(width - pad.right, y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function map(value, inMin, inMax, outMin, outMax) {
+      return outMin + (outMax - outMin) * (value - inMin) / (inMax - inMin);
+    }
+
+    function drawLineChart(canvas, points, options) {
+      const dpr = window.devicePixelRatio || 1;
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      if (!width || !height) return;
+      const targetWidth = Math.round(width * dpr);
+      const targetHeight = Math.round(height * dpr);
+      if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+      }
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      const pad = { top: 20, right: 18, bottom: 34, left: 54 };
+      const yMin = options.yMin ?? Math.min(...points.map(point => point.y)) - 0.25;
+      const yMax = options.yMax ?? Math.max(...points.map(point => point.y)) + 0.25;
+
+      drawGrid(ctx, width, height, pad, 6, 5);
+      drawAxes(ctx, width, height, pad);
+
+      ctx.save();
+      ctx.strokeStyle = options.line || "rgba(84, 214, 200, .95)";
+      ctx.lineWidth = 2.8;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      points.forEach((point, index) => {
+        const x = map(point.x, options.xMin, options.xMax, pad.left, width - pad.right);
+        const y = map(point.y, yMin, yMax, height - pad.bottom, pad.top);
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+      ctx.restore();
+
+      if (options.threshold !== undefined) {
+        const y = map(options.threshold, yMin, yMax, height - pad.bottom, pad.top);
+        ctx.save();
+        ctx.strokeStyle = "rgba(255, 209, 102, .7)";
+        ctx.setLineDash([7, 5]);
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(width - pad.right, y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = "rgba(255, 209, 102, .9)";
+        ctx.font = "12px Trebuchet MS, sans-serif";
+        ctx.fillText("threshold", width - pad.right - 60, y - 8);
+        ctx.restore();
+      }
+
+      if (options.pointsOverlay) {
+        ctx.save();
+        options.pointsOverlay.forEach(point => {
+          const x = map(point.x, options.xMin, options.xMax, pad.left, width - pad.right);
+          const y = map(point.y, yMin, yMax, height - pad.bottom, pad.top);
+          ctx.fillStyle = point.fill;
+          ctx.strokeStyle = "rgba(8, 12, 22, .72)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(x, y, 4.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        });
+        ctx.restore();
+      }
+
+      ctx.save();
+      ctx.fillStyle = "rgba(237, 243, 255, .88)";
+      ctx.font = "12px Trebuchet MS, sans-serif";
+      ctx.fillText(options.xLabelLeft, pad.left, height - 10);
+      ctx.fillText(options.xLabelRight, width - pad.right - ctx.measureText(options.xLabelRight).width, height - 10);
+      ctx.restore();
+    }
+
+    function drawScatter(canvas, points, options) {
+      const dpr = window.devicePixelRatio || 1;
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      if (!width || !height) return;
+      const targetWidth = Math.round(width * dpr);
+      const targetHeight = Math.round(height * dpr);
+      if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+      }
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      const pad = { top: 20, right: 18, bottom: 42, left: 56 };
+      drawGrid(ctx, width, height, pad, 5, 5);
+      drawAxes(ctx, width, height, pad);
+
+      points.forEach((point, index) => {
+        const x = map(point.x, options.xMin, options.xMax, pad.left, width - pad.right);
+        const y = map(point.y, options.yMin, options.yMax, height - pad.bottom, pad.top);
+        ctx.save();
+        ctx.fillStyle = point.color;
+        ctx.strokeStyle = "rgba(8, 12, 22, .72)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(x, y, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "rgba(237, 243, 255, .86)";
+        ctx.font = "12px Trebuchet MS, sans-serif";
+        const labelOffsetX = point.labelOffsetX ?? (x < width * 0.5 ? 8 : -8);
+        const labelOffsetY = point.labelOffsetY ?? (index % 2 === 0 ? -10 : 14);
+        ctx.textAlign = labelOffsetX < 0 ? "right" : "left";
+        ctx.fillText(point.label, x + labelOffsetX, y + labelOffsetY);
+        ctx.restore();
+      });
+
+      ctx.save();
+      ctx.fillStyle = "rgba(237, 243, 255, .88)";
+      ctx.font = "12px Trebuchet MS, sans-serif";
+      ctx.fillText(options.xLabelLeft, pad.left, height - 10);
+      ctx.fillText(options.xLabelRight, width - pad.right - ctx.measureText(options.xLabelRight).width, height - 10);
+      ctx.restore();
+    }
+
+    function drawAgingView(canvas, family, ageRatio) {
+      const dpr = window.devicePixelRatio || 1;
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      if (!width || !height) return;
+      const targetWidth = Math.round(width * dpr);
+      const targetHeight = Math.round(height * dpr);
+      if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+      }
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      const pad = { top: 20, right: 20, bottom: 42, left: 54 };
+      const fresh = toPoints(family.thdFresh);
+      const aged = toPoints(family.thdAged);
+      const current = blendPoints(family.thdFresh, family.thdAged, ageRatio);
+      const yValues = [...family.thdFresh, ...family.thdAged].map(point => point[1]);
+      const yMin = Math.min(...yValues) - 0.35;
+      const yMax = Math.max(...yValues) + 0.35;
+
+      drawGrid(ctx, width, height, pad, 6, 5);
+      drawAxes(ctx, width, height, pad);
+
+      function plot(points, color, widthPx) {
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = widthPx;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.beginPath();
+        points.forEach((point, index) => {
+          const x = map(point.x, family.xRange[0], family.xRange[1], pad.left, width - pad.right);
+          const y = map(point.y, yMin, yMax, height - pad.bottom, pad.top);
+          if (index === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      plot(fresh, "rgba(84, 214, 200, .95)", 3);
+      plot(aged, "rgba(255, 139, 76, .92)", 3);
+      plot(current, "rgba(255, 209, 102, .95)", 2.5);
+
+      ctx.save();
+      ctx.fillStyle = "rgba(84, 214, 200, .92)";
+      ctx.font = "12px Trebuchet MS, sans-serif";
+      ctx.fillText("fresh", width - pad.right - 118, 30);
+      ctx.fillStyle = "rgba(255, 139, 76, .92)";
+      ctx.fillText("aged", width - pad.right - 72, 30);
+      ctx.fillStyle = "rgba(255, 209, 102, .92)";
+      ctx.fillText("now", width - pad.right - 28, 30);
+      ctx.restore();
+    }
+
+    function bitCount(bits) {
+      return bits.split("").reduce((sum, bit) => sum + (bit === "1" ? 1 : 0), 0);
+    }
+
+    function render() {
+      const family = DEMO_DATA[state.family];
+      const ageRatio = state.age / 100;
+      const bits = ageRatio < 0.5 ? family.bitsFresh : family.bitsAged;
+      const currentCurve = blendPoints(family.thdFresh, family.thdAged, ageRatio);
+      const driftDb = Math.abs(family.thdAged[2][1] - family.thdFresh[2][1]) * ageRatio;
+
+      el.familyTag.textContent = family.label;
+      el.ageTag.textContent = `${state.age}%`;
+      el.thresholdValue.textContent = `${family.threshold.toFixed(2)} dB`;
+      el.balanceValue.textContent = `${bitCount(bits)} / 64`;
+      el.spreadValue.textContent = `${family.sigma.toFixed(2)} dB`;
+      el.windowValue.textContent = `${family.dcRange} | ${family.acRange}`;
+      el.processText.textContent = state.age < 35
+        ? `${family.label} looks close to the enrolled template.`
+        : `${family.label} shows visible drift as aging increases.`;
+      el.bitCaption.textContent = state.age < 35
+        ? "Fresh example"
+        : "Aged example";
+      el.freshLabel.textContent = `${family.label} before stress`;
+      el.agedLabel.textContent = `${family.label} after stress`;
+      el.freshScore.textContent = "Baseline";
+      el.agedScore.textContent = state.age === 0 ? "Same" : "Shifted";
+      el.driftValue.textContent = `${driftDb.toFixed(2)} dB`;
+
+      bitCells.forEach((cell, index) => {
+        const bit = bits[index];
+        cell.className = `bit ${bit === "1" ? "on" : "off"}`;
+        cell.textContent = bit;
+      });
+
+      drawLineChart(el.vtcCanvas, blendPoints(family.vtcFresh, family.vtcAged, ageRatio), {
+        xMin: family.xRange[0],
+        xMax: family.xRange[1],
+        yMin: 0,
+        yMax: 5,
+        line: "rgba(84, 214, 200, .96)",
+        xLabelLeft: `${family.xRange[0].toFixed(1)} V`,
+        xLabelRight: `${family.xRange[1].toFixed(1)} V`
+      });
+
+      drawLineChart(el.thdCanvas, currentCurve, {
+        xMin: family.xRange[0],
+        xMax: family.xRange[1],
+        yMin: Math.min(family.threshold - 1.2, ...family.thdFresh.map(point => point[1]), ...family.thdAged.map(point => point[1])),
+        yMax: Math.max(family.threshold + 0.8, ...family.thdFresh.map(point => point[1]), ...family.thdAged.map(point => point[1])),
+        line: "rgba(255, 209, 102, .96)",
+        threshold: family.threshold,
+        pointsOverlay: currentCurve.map((point, index) => ({
+          ...point,
+          fill: point.y > family.threshold ? "rgba(255, 139, 76, .96)" : "rgba(84, 214, 200, .96)"
+        })),
+        xLabelLeft: `${family.xRange[0].toFixed(1)} V`,
+        xLabelRight: `${family.xRange[1].toFixed(1)} V`
+      });
+
+      drawAgingView(el.agingCanvas, family, ageRatio);
+
+      drawScatter(el.familyScatterCanvas, Object.values(DEMO_DATA).map((item, index) => ({
+        x: item.threshold,
+        y: item.sigma,
+        label: item.label,
+        color: item.group === "PDK" ? "#7aa7ff" : "#ff8b4c",
+        labelOffsetX: index % 2 === 0 ? 10 : -10,
+        labelOffsetY: index % 2 === 0 ? -12 : 16
+      })), {
+        xMin: -14,
+        xMax: -4,
+        yMin: 0,
+        yMax: 6.5,
+        xLabelLeft: "-14 dB",
+        xLabelRight: "-4 dB"
+      });
+
+      drawScatter(el.harmonicScatterCanvas, Object.values(DEMO_DATA).map((item, index) => ({
+        x: item.mean_hd2,
+        y: item.mean_hd3,
+        label: item.label,
+        color: item.group === "PDK" ? "#57d7c8" : "#ffd166",
+        labelOffsetX: index % 2 === 0 ? 10 : -10,
+        labelOffsetY: index % 3 === 0 ? -12 : 16
+      })), {
+        xMin: -14,
+        xMax: -3,
+        yMin: -25,
+        yMax: -3,
+        xLabelLeft: "-14 dB",
+        xLabelRight: "-3 dB"
+      });
+    }
+
+    function syncState() {
+      state.family = el.family.value;
+      state.age = Number(el.age.value);
+      render();
+    }
+
+    el.family.addEventListener("change", syncState);
+    el.age.addEventListener("input", syncState);
+    window.addEventListener("resize", render);
+
+    el.family.value = "CD4069";
+    el.age.value = "0";
+    syncState();
+  </script>
+</body>
+</html>
+
