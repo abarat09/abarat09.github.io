@@ -251,6 +251,8 @@ function initGraph() {
     { id:'physics-bridge',   label:'Physics → Security Bridge',  cat:'identity',   r:24, transferable:false, desc:'Translates device-level physics into deployable security primitives. Models what happens at the silicon boundary — then asks what it means for trust.' },
     { id:'parallel-thinker', label:'Parallel Thinker',           cat:'identity',   r:20, transferable:false, desc:'Maps the problem space AND gathers data simultaneously. Doesn\'t wait for a complete picture before acting — works both tracks at once.' },
     { id:'adapts',           label:'Adapts Under Pressure',      cat:'identity',   r:20, transferable:false, desc:'Turned a career setback into 4+ years of frontier research in an emerging field. The pivot wasn\'t planned — the follow-through was.' },
+    { id:'builds-to-last',   label:'Builds to Last',             cat:'identity',   r:19, transferable:true,  desc:'If there\'s margin in the schedule or budget, it goes into making things more robust — not cutting corners. The same instinct that puts savings before spending shows up in engineering: invests in the right architecture even when quick-and-dirty would pass review. Anti-technical-debt by nature.' },
+    { id:'hard-first',       label:'Hardest Problem First',      cat:'identity',   r:19, transferable:true,  desc:'Sequences work by difficulty, not comfort. The blocking problem — the one with the most uncertainty, the most risk — gets attacked first. Easier tasks fill in around it. In research: tackle the hard physics before the easy background. In industry: kill the critical-path risk before polishing the demo. Reduces downstream surprises.' },
 
     // HUMAN SKILLS
     { id:'translator',       label:'Complexity Translator',      cat:'human',      r:22, transferable:true,  desc:'What students and mentees say: "she makes hard things feel approachable." First honed writing technical documentation at Vertiv; deepened through teaching 50+ students and peer-reviewed publishing.' },
@@ -329,6 +331,9 @@ function initGraph() {
     {s:'parallel-thinker',t:'tcad',w:2},{s:'parallel-thinker',t:'python-matlab',w:2},{s:'parallel-thinker',t:'fmea-rca',w:1.5},
     // Adapts
     {s:'adapts',t:'phd',w:2.5},{s:'adapts',t:'vertiv',w:2},
+    {s:'aakriti',t:'builds-to-last',w:2},{s:'aakriti',t:'hard-first',w:2},
+    {s:'builds-to-last',t:'sees-it-through',w:2.5},{s:'builds-to-last',t:'fmea-rca',w:1.5},{s:'builds-to-last',t:'dfm-dft',w:1.5},{s:'builds-to-last',t:'tech-writing',w:1.5},
+    {s:'hard-first',t:'parallel-thinker',w:2},{s:'hard-first',t:'adapts',w:1.5},{s:'hard-first',t:'phd',w:1.5},{s:'hard-first',t:'fmea-rca',w:1.5},
     // Human skills
     {s:'translator',t:'teacher',w:3},{s:'translator',t:'published',w:2},{s:'translator',t:'visual-patterns',w:2},{s:'translator',t:'speaker',w:1.5},{s:'translator',t:'tech-writing',w:2},
     {s:'published',t:'reviewer',w:2.5},{s:'published',t:'speaker',w:2.5},{s:'published',t:'puf',w:2},{s:'published',t:'trap-kinetics',w:2},
