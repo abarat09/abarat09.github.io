@@ -640,9 +640,12 @@
           <div class="panel chart-card">
             <div class="chart-head">
               <h2>THD fingerprint</h2>
-              <span>Sampled against the family threshold</span>
+              <span>Measured silicon response (simulation &amp; hardware)</span>
             </div>
-            <canvas id="thdCanvas" width="900" height="360"></canvas>
+            <img id="thdImg"
+                 src="THD_hardware_clean.png"
+                 alt="THD fingerprint curves"
+                 style="width:100%;max-width:900px;display:block;margin:0 auto;border-radius:6px;">
           </div>
         </section>
 
@@ -858,7 +861,7 @@
       agedScore: document.getElementById("agedScore"),
       driftValue: document.getElementById("driftValue"),
       vtcCanvas: document.getElementById("vtcCanvas"),
-      thdCanvas: document.getElementById("thdCanvas"),
+      thdImg: document.getElementById("thdImg"),
       agingCanvas: document.getElementById("agingCanvas"),
       familyScatterCanvas: document.getElementById("familyScatterCanvas"),
       harmonicScatterCanvas: document.getElementById("harmonicScatterCanvas")
@@ -1149,20 +1152,10 @@
         xLabelRight: `${family.xRange[1].toFixed(1)} V`
       });
 
-      drawLineChart(el.thdCanvas, currentCurve, {
-        xMin: family.xRange[0],
-        xMax: family.xRange[1],
-        yMin: Math.min(family.threshold - 1.2, ...family.thdFresh.map(point => point[1]), ...family.thdAged.map(point => point[1])),
-        yMax: Math.max(family.threshold + 0.8, ...family.thdFresh.map(point => point[1]), ...family.thdAged.map(point => point[1])),
-        line: "rgba(255, 209, 102, .96)",
-        threshold: family.threshold,
-        pointsOverlay: currentCurve.map((point, index) => ({
-          ...point,
-          fill: point.y > family.threshold ? "rgba(255, 139, 76, .96)" : "rgba(84, 214, 200, .96)"
-        })),
-        xLabelLeft: `${family.xRange[0].toFixed(1)} V`,
-        xLabelRight: `${family.xRange[1].toFixed(1)} V`
-      });
+      // Swap static THD image based on chip group
+      el.thdImg.src = (family.group === "HW")
+        ? "THD_hardware_clean.png"
+        : "THD_PDKs_clean.png";
 
       drawAgingView(el.agingCanvas, family, ageRatio);
 
@@ -1184,34 +1177,4 @@
 
       drawScatter(el.harmonicScatterCanvas, Object.values(DEMO_DATA).map((item, index) => ({
         x: item.mean_hd2,
-        y: item.mean_hd3,
-        label: item.label,
-        color: item.group === "PDK" ? "#57d7c8" : "#ffd166",
-        labelOffsetX: index % 2 === 0 ? 10 : -10,
-        labelOffsetY: index % 3 === 0 ? -12 : 16
-      })), {
-        xMin: -14,
-        xMax: -3,
-        yMin: -25,
-        yMax: -3,
-        xLabelLeft: "-14 dB",
-        xLabelRight: "-3 dB"
-      });
-    }
-
-    function syncState() {
-      state.family = el.family.value;
-      state.age = Number(el.age.value);
-      render();
-    }
-
-    el.family.addEventListener("change", syncState);
-    el.age.addEventListener("input", syncState);
-    window.addEventListener("resize", render);
-
-    el.family.value = "CD4069";
-    el.age.value = "0";
-    syncState();
-  </script>
-</body>
-</html>
+      
