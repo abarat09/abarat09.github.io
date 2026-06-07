@@ -351,6 +351,50 @@
       .result-grid{grid-template-columns:1fr}
       .bits{grid-template-columns:repeat(8, minmax(0, 1fr))}
     }
+    
+       .threshold-visual{
+      margin-top:16px;
+      padding:14px;
+      border:1px solid rgba(173, 205, 255, .12);
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(4, 10, 21, .55), rgba(8, 15, 29, .28));
+    }
+    .threshold-label{
+      font-size:.8rem;
+      color:var(--accent3);
+      margin-bottom:10px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+    }
+    .threshold-line{
+      height:2px;
+      background:rgba(255, 209, 102, .9);
+      margin:18px 0;
+      position:relative;
+    }
+    .bit-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .bit-dot{
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      display:inline-grid;
+      place-items:center;
+      font-size:.75rem;
+      font-weight:700;
+      color:#08111f;
+    }
+    .bit-dot.one{ background:linear-gradient(180deg,#ffd166,#ff8b4c); }
+    .bit-dot.zero{ background:linear-gradient(180deg,#64d7c9,#2e8fb7); }
+    .threshold-note{
+      margin-top:10px;
+      font-size:.84rem;
+      color:var(--muted);
+    } 
   </style>
 </head>
 <body>
@@ -450,6 +494,22 @@
             <span class="chip"><span class="swatch" style="background:linear-gradient(180deg,#64d7c9,#2e8fb7)"></span>0 = THD below threshold</span>
             <span class="chip"><span class="swatch" style="background:linear-gradient(180deg,#edf3ff,#edf3ff)"></span>Private implementation stays hidden</span>
           </div>
+
+          <div class="threshold-visual">
+          <div class="threshold-label">Threshold</div>
+          <div class="threshold-line"></div>
+          <div class="bit-row">
+            <span class="bit-dot zero">0</span>
+            <span class="bit-dot zero">0</span>
+            <span class="bit-dot one">1</span>
+            <span class="bit-dot zero">0</span>
+            <span class="bit-dot one">1</span>
+            <span class="bit-dot one">1</span>
+            <span class="bit-dot zero">0</span>
+            <span class="bit-dot one">1</span>
+          </div>
+          <div class="threshold-note">Above the line = 1, below the line = 0</div>
+        </div>
         </section>
 
         <section class="panel">
@@ -576,11 +636,6 @@
           <div class="footer-note">
             The page is designed to explain the idea quickly, with more detail available only if the viewer wants it.
             This drift is what helps separate a genuine chip from a counterfeit or aged one.
-          </div>
-          <div class="footer-note" style="margin-top:10px;color:#ffd166;">
-            Proprietary research demo. Copyright &copy; 2026 Aakriti Barat. All rights reserved.
-            No part of this page or the underlying IFM concept may be copied, reused, reverse engineered, or redistributed without written permission.
-            For licensing or collaboration, contact the author and cite the work using the author ORCID.
           </div>
         </section>
       </main>
