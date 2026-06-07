@@ -51,7 +51,7 @@ window.IFM_DEMO_DATA = {
         thdAged:  [[0.00, -10.20], [0.24, -12.20], [0.52, -14.60], [0.78, -11.30], [1.04, -13.70], [1.28, -12.10], [1.50, -10.95]]
       },
       CD4069: {
-        label: "CD4069",
+        label: "Commercial Chip A",
         group: "HW",
         threshold: -5.93,
         sigma: 0.12,
@@ -68,7 +68,7 @@ window.IFM_DEMO_DATA = {
         thdAged:  [[1.00, -5.00], [1.62, -6.20], [2.08, -7.55], [2.48, -5.55], [2.74, -7.05], [3.08, -6.35], [3.60, -5.20]]
       },
       SN74HC04: {
-        label: "SN74HC04",
+        label: "Commercial Chip B",
         group: "HW",
         threshold: -8.34,
         sigma: 0.05,
