@@ -1,6 +1,6 @@
 window.IFM_DEMO_DATA = {
       "22nm": {
-        label: "22 nm",
+        label: "PDK Family A",
         group: "PDK",
         threshold: -6.46,
         sigma: 2.10,
@@ -17,7 +17,7 @@ window.IFM_DEMO_DATA = {
         thdAged:  [[0.00, -5.50], [0.12, -6.35], [0.24, -7.55], [0.36, -6.00], [0.50, -7.05], [0.66, -6.35], [0.80, -5.45]]
       },
       "45nm": {
-        label: "45 nm GPDK",
+        label: "PDK Family B",
         group: "PDK",
         threshold: -8.02,
         sigma: 2.51,
@@ -34,7 +34,7 @@ window.IFM_DEMO_DATA = {
         thdAged:  [[0.00, -6.95], [0.24, -7.85], [0.54, -8.75], [0.82, -7.20], [1.08, -8.10], [1.30, -7.45], [1.50, -6.75]]
       },
       "ncsu_45nm": {
-        label: "45 nm NCSU",
+        label: "PDK Family C",
         group: "PDK",
         threshold: -13.04,
         sigma: 5.98,
