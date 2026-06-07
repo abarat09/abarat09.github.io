@@ -343,6 +343,17 @@
     input[type="range"]{
       accent-color:var(--accent);
     }
+    .metric input[type="range"]{
+      margin-top:7px;
+      margin-bottom:2px;
+    }
+    .metric-slider-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:.72rem;
+      color:var(--muted);
+      margin-top:2px;
+    }
     .mini-stats{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
@@ -621,7 +632,9 @@
           <div class="metric">
             <div class="label">Threshold rule</div>
             <div class="value" id="thresholdValue">-5.93 dB</div>
-            <div class="sub">Below = 0, above = 1</div>
+            <input id="thresholdSlider" type="range" min="-20" max="-3" step="0.1" value="-5.93">
+            <div class="metric-slider-row"><span id="thresholdMin">-20 dB</span><span id="thresholdMax">-3 dB</span></div>
+            <div class="sub">Drag to shift — bits update live</div>
           </div>
           <div class="metric">
             <div class="label">Response</div>
@@ -631,7 +644,9 @@
           <div class="metric">
             <div class="label">Variation</div>
             <div class="value" id="spreadValue">0.12 dB</div>
-            <div class="sub">How tightly it clusters</div>
+            <input id="sigmaSlider" type="range" min="0.01" max="8" step="0.01" value="0.12">
+            <div class="metric-slider-row"><span>0 dB</span><span>8 dB</span></div>
+            <div class="sub">Drag to see scatter shift</div>
           </div>
           <div class="metric">
             <div class="label">Sweep window</div>
@@ -845,7 +860,9 @@
     const DEMO_DATA = window.IFM_DEMO_DATA;
     const state = {
       family: "CD4069",
-      age: 0
+      age: 0,
+      threshold: null,   // null = use family default
+      sigma: null        // null = use family default
     };
 
     const el = {
@@ -854,6 +871,10 @@
       familyTag: document.getElementById("familyTag"),
       ageTag: document.getElementById("ageTag"),
       thresholdValue: document.getElementById("thresholdValue"),
+      thresholdSlider: document.getElementById("thresholdSlider"),
+      thresholdMin: document.getElementById("thresholdMin"),
+      thresholdMax: document.getElementById("thresholdMax"),
+      sigmaSlider: document.getElementById("sigmaSlider"),
       balanceValue: document.getElementById("balanceValue"),
       spreadValue: document.getElementById("spreadValue"),
       windowValue: document.getElementById("windowValue"),
@@ -1116,19 +1137,70 @@
       return bits.split("").reduce((sum, bit) => sum + (bit === "1" ? 1 : 0), 0);
     }
 
+    // Recompute 64-bit response from the THD curve at a given threshold
+    function computeBitsFromTHD(family, threshold, ageRatio) {
+      const fresh = family.thdFresh;
+      const aged  = family.thdAged;
+      const n     = fresh.length;
+      // Blend fresh/aged at each pre-computed point
+      const blended = fresh.map((pt, i) => [pt[0], pt[1] + (aged[i][1] - pt[1]) * ageRatio]);
+      const xMin = blended[0][0];
+      const xMax = blended[n - 1][0];
+      let bits = "";
+      for (let i = 0; i < 64; i++) {
+        const x = xMin + (xMax - xMin) * (i / 63);
+        // Linear interpolation along curve
+        let thd = blended[0][1];
+        for (let j = 0; j < blended.length - 1; j++) {
+          if (x >= blended[j][0] && x <= blended[j + 1][0]) {
+            const t = (x - blended[j][0]) / (blended[j + 1][0] - blended[j][0]);
+            thd = blended[j][1] + t * (blended[j + 1][1] - blended[j][1]);
+            break;
+          }
+        }
+        bits += thd > threshold ? "1" : "0";
+      }
+      return bits;
+    }
+
+    // Reset sliders to match a newly selected family
+    function resetSlidersForFamily(family) {
+      // Threshold: range covers the full spread of the family's THD curve ±2 dB
+      const allY = [...family.thdFresh, ...family.thdAged].map(pt => pt[1]);
+      const tMin = Math.floor(Math.min(...allY) - 2);
+      const tMax = Math.ceil(Math.max(...allY) + 2);
+      el.thresholdSlider.min   = tMin;
+      el.thresholdSlider.max   = tMax;
+      el.thresholdSlider.value = family.threshold;
+      el.thresholdMin.textContent = tMin + " dB";
+      el.thresholdMax.textContent = tMax + " dB";
+      state.threshold = family.threshold;
+      // Sigma: reset to family default
+      el.sigmaSlider.value = family.sigma;
+      state.sigma = family.sigma;
+    }
+
     function render() {
-      const family = DEMO_DATA[state.family];
-      const ageRatio = state.age / 100;
-      const bits = ageRatio < 0.5 ? family.bitsFresh : family.bitsAged;
+      const family    = DEMO_DATA[state.family];
+      const ageRatio  = state.age / 100;
+      const threshold = state.threshold ?? family.threshold;
+      const sigma     = state.sigma     ?? family.sigma;
+
+      // Use live-computed bits when threshold is user-adjusted; precomputed otherwise
+      const usingCustomThreshold = Math.abs(threshold - family.threshold) > 0.05;
+      const bits = usingCustomThreshold
+        ? computeBitsFromTHD(family, threshold, ageRatio)
+        : (ageRatio < 0.5 ? family.bitsFresh : family.bitsAged);
+
       const currentCurve = blendPoints(family.thdFresh, family.thdAged, ageRatio);
       const driftDb = Math.abs(family.thdAged[2][1] - family.thdFresh[2][1]) * ageRatio;
 
-      el.familyTag.textContent = family.label;
-      el.ageTag.textContent = `${state.age}%`;
-      el.thresholdValue.textContent = `${family.threshold.toFixed(2)} dB`;
-      el.balanceValue.textContent = `${bitCount(bits)} / 64`;
-      el.spreadValue.textContent = `${family.sigma.toFixed(2)} dB`;
-      el.windowValue.textContent = `${family.dcRange} | ${family.acRange}`;
+      el.familyTag.textContent  = family.label;
+      el.ageTag.textContent     = `${state.age}%`;
+      el.thresholdValue.textContent = `${threshold.toFixed(2)} dB`;
+      el.balanceValue.textContent   = `${bitCount(bits)} / 64`;
+      el.spreadValue.textContent    = `${sigma.toFixed(2)} dB`;
+      el.windowValue.textContent    = `${family.dcRange} | ${family.acRange}`;
       el.processText.textContent = state.age < 35
         ? `${family.label} looks close to the enrolled template.`
         : `${family.label} shows visible drift as aging increases.`;
@@ -1177,14 +1249,17 @@
 
       drawAgingView(el.agingCanvas, family, ageRatio);
 
-      drawScatter(el.familyScatterCanvas, Object.values(DEMO_DATA).map((item, index) => ({
-        x: item.threshold,
-        y: item.sigma,
-        label: item.label,
-        color: item.group === "PDK" ? "#7aa7ff" : "#ff8b4c",
-        labelOffsetX: index % 2 === 0 ? 10 : -10,
-        labelOffsetY: index % 2 === 0 ? -12 : 16
-      })), {
+      drawScatter(el.familyScatterCanvas, Object.values(DEMO_DATA).map((item, index) => {
+        const isCurrent = item.label === family.label;
+        return {
+          x: isCurrent ? threshold : item.threshold,
+          y: isCurrent ? sigma     : item.sigma,
+          label: item.label,
+          color: item.group === "PDK" ? "#7aa7ff" : "#ff8b4c",
+          labelOffsetX: index % 2 === 0 ? 10 : -10,
+          labelOffsetY: index % 2 === 0 ? -12 : 16
+        };
+      }), {
         xMin: -14,
         xMax: -4,
         yMin: 0,
@@ -1210,16 +1285,32 @@
       });
     }
 
-    el.family.addEventListener("change", () => {
-      state.family = el.family.value;
-      render();
-    });
     el.age.addEventListener("input", () => {
       state.age = parseInt(el.age.value);
       render();
     });
 
+    el.thresholdSlider.addEventListener("input", () => {
+      state.threshold = parseFloat(el.thresholdSlider.value);
+      render();
+    });
+
+    el.sigmaSlider.addEventListener("input", () => {
+      state.sigma = parseFloat(el.sigmaSlider.value);
+      render();
+    });
+
+    // When family changes, reset sliders to that family's calibrated values
+    el.family.addEventListener("change", () => {
+      state.family = el.family.value;
+      resetSlidersForFamily(DEMO_DATA[state.family]);
+      render();
+    });
+
     window.addEventListener("resize", render);
+
+    // Init sliders for default family before first render
+    resetSlidersForFamily(DEMO_DATA[state.family]);
     render();
   </script>
 </body>
