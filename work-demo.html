@@ -1177,4 +1177,32 @@
 
       drawScatter(el.harmonicScatterCanvas, Object.values(DEMO_DATA).map((item, index) => ({
         x: item.mean_hd2,
-      
+            y: item.mean_hd3,
+        label: item.label,
+        color: item.group === "PDK" ? "#7aa7ff" : "#ff8b4c",
+        labelOffsetX: index % 2 === 0 ? 10 : -10,
+        labelOffsetY: index % 2 === 0 ? -12 : 16
+      })), {
+        xMin: -12,
+        xMax: -2,
+        yMin: -25,
+        yMax: -11,
+        xLabelLeft: "-12 dB",
+        xLabelRight: "-2 dB"
+      });
+    }
+
+    el.family.addEventListener("change", () => {
+      state.family = el.family.value;
+      render();
+    });
+    el.age.addEventListener("input", () => {
+      state.age = parseInt(el.age.value);
+      render();
+    });
+
+    window.addEventListener("resize", render);
+    render();
+  </script>
+</body>
+</html>
