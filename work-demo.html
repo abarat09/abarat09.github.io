@@ -1268,20 +1268,41 @@
         xLabelRight: "-4 dB"
       });
 
-      drawScatter(el.harmonicScatterCanvas, Object.values(DEMO_DATA).map((item, index) => ({
-        x: item.mean_hd2,
-            y: item.mean_hd3,
-        label: item.label,
-        color: item.group === "PDK" ? "#7aa7ff" : "#ff8b4c",
-        labelOffsetX: index % 2 === 0 ? 10 : -10,
-        labelOffsetY: index % 2 === 0 ? -12 : 16
-      })), {
-        xMin: -12,
-        xMax: -2,
-        yMin: -25,
-        yMax: -11,
-        xLabelLeft: "-12 dB",
-        xLabelRight: "-2 dB"
+      // Decompose threshold (THD) → HD2/HD3 preserving the family's HD3:HD2 ratio
+      function thresholdToHD(item, overrideThreshold) {
+        const thd_lin  = Math.pow(10, overrideThreshold / 20);
+        const hd2_base = Math.pow(10, item.mean_hd2 / 20);
+        const hd3_base = Math.pow(10, item.mean_hd3 / 20);
+        const r        = hd3_base / hd2_base;
+        const hd2_lin  = thd_lin * Math.sqrt(2 / (1 + r * r));
+        const hd3_lin  = r * hd2_lin;
+        return {
+          hd2: 20 * Math.log10(hd2_lin),
+          hd3: 20 * Math.log10(hd3_lin)
+        };
+      }
+
+      const harmonicPoints = Object.values(DEMO_DATA).map((item, index) => {
+        const isCurrent = item.label === family.label;
+        const hd = isCurrent ? thresholdToHD(item, threshold) : { hd2: item.mean_hd2, hd3: item.mean_hd3 };
+        return {
+          x: hd.hd2,
+          y: hd.hd3,
+          label: item.label,
+          color: item.group === "PDK" ? "#7aa7ff" : "#ff8b4c",
+          labelOffsetX: index % 2 === 0 ? 10 : -10,
+          labelOffsetY: index % 2 === 0 ? -12 : 16
+        };
+      });
+      const allHD2 = harmonicPoints.map(p => p.x);
+      const allHD3 = harmonicPoints.map(p => p.y);
+      const hxMin = Math.floor(Math.min(...allHD2)) - 1;
+      const hxMax = Math.ceil(Math.max(...allHD2)) + 1;
+      const hyMin = Math.floor(Math.min(...allHD3)) - 1;
+      const hyMax = Math.ceil(Math.max(...allHD3)) + 1;
+      drawScatter(el.harmonicScatterCanvas, harmonicPoints, {
+        xMin: hxMin, xMax: hxMax, yMin: hyMin, yMax: hyMax,
+        xLabelLeft: hxMin + " dB", xLabelRight: hxMax + " dB"
       });
     }
 
