@@ -395,7 +395,6 @@
     #vtcCanvas{
       width:100%;
       display:block;
-      aspect-ratio:577/504;
     }
     #agingCanvas{
       width:100%;
@@ -1159,7 +1158,22 @@
       });
 
       // Swap embedded THD image based on chip group
-      el.thdImg.src = (family.group === "HW") ? _THD_HW : _THD_PDK;
+      const newSrc = (family.group === "HW") ? _THD_HW : _THD_PDK;
+      if (el.thdImg.src !== newSrc) {
+        el.thdImg.src = newSrc;
+      }
+      // Sync VTC canvas height to THD image height (pixel-perfect match)
+      function syncVtcHeight() {
+        const h = el.thdImg.offsetHeight;
+        if (h > 10) {
+          el.vtcCanvas.style.height = h + "px";
+        }
+      }
+      if (el.thdImg.complete && el.thdImg.naturalHeight > 0) {
+        syncVtcHeight();
+      } else {
+        el.thdImg.onload = () => { syncVtcHeight(); drawLineChart(el.vtcCanvas, blendPoints(family.vtcFresh, family.vtcAged, ageRatio), { xMin: family.xRange[0], xMax: family.xRange[1], yMin: 0, yMax: 5, line: "rgba(84, 214, 200, .96)", xLabelLeft: `${family.xRange[0].toFixed(1)} V`, xLabelRight: `${family.xRange[1].toFixed(1)} V` }); };
+      }
 
       drawAgingView(el.agingCanvas, family, ageRatio);
 
