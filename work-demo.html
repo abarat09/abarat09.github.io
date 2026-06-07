@@ -392,6 +392,16 @@
       padding:18px;
       min-height:320px;
     }
+    #vtcCanvas{
+      width:100%;
+      display:block;
+      aspect-ratio:577/504;
+    }
+    #agingCanvas{
+      width:100%;
+      display:block;
+      height:320px;
+    }
     .chart-head{
       display:flex;
       justify-content:space-between;
@@ -639,7 +649,7 @@
               <h2>VTC view</h2>
               <span>Bias sweep to output swing</span>
             </div>
-            <canvas id="vtcCanvas" width="900" height="750"></canvas>
+            <canvas id="vtcCanvas" width="900"></canvas>
           </div>
           <div class="panel chart-card">
             <div class="chart-head">
@@ -667,10 +677,8 @@
                 <span class="chip"><span class="swatch" style="background:linear-gradient(180deg,#ffd166,#ff8b4c)"></span>1 = above threshold</span>
                 <span class="chip"><span class="swatch" style="background:linear-gradient(180deg,#64d7c9,#2e8fb7)"></span>0 = below threshold</span>
               </div>
-                <p style="font-size:.9rem; color:var(--muted); margin-top:10px; line-height:1.6; max-width:420px;">
-                <strong style="color:var(--text);">On a real chip:</strong> these bits never leave the die. They feed on-chip into a fuzzy extractor and Key Derivation Function (KDF),
-                producing a cryptographic key consumed internally. The outside world sees only a signed attestation or challenge-response —
-                never the raw PUF response. This is how companies that work in this area, do it in production silicon.
+                <p style="font-size:1.05rem; color:var(--muted); margin-top:10px; line-height:1.6; max-width:420px;">
+                <strong style="color:var(--text);">On a real chip:</strong> bits feed on-die into a fuzzy extractor and KDF — the outside world sees only a signed attestation or challenge-response, never the raw PUF response.
               </p>
             </div>
           
