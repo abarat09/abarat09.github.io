@@ -6,7 +6,7 @@
   <title>Aakriti Barat | Hardware Security Researcher | PhD Electrical Engineering</title>  <meta name="description" content="Aakriti Barat — PhD candidate in Electrical Engineering at Ohio University specializing in hardware security, Physically Unclonable Functions (PUF), IC authentication, and silicon root-of-trust. Published IEEE and ACM researcher with TCAD/HSPICE expertise. Available Fall 2026.">
   <meta name="keywords" content="hardware security engineer, Physically Unclonable Function, PUF, IC authentication, root of trust, TCAD, HSPICE, supply chain security, silicon security, embedded security, FPGA security, side-channel analysis, fault injection, hardware cybersecurity, PhD electrical engineering, semiconductor security">
   <meta name="author" content="Aakriti Barat">
-  <meta name="robots" content="index, follow
+  <meta name="robots" content="index, follow">
   <meta property="og:title" content="Aakriti Barat | Hardware Security Researcher">
   <meta property="og:description" content="PhD candidate in EE specializing in hardware security, PUF, IC authentication, and silicon root-of-trust. IEEE and ACM published. Available Fall 2026.">
   <meta property="og:type" content="website">
@@ -234,131 +234,7 @@
   margin-bottom: 0.5rem;
 }
 
-<section id="industry" class="alt-bg">
-  <div class="container">
-    <p class="section-eyebrow">Industry Relevance</p>
-    <h2 class="section-title">Where This Work Matters</h2>
-    <p class="industry-intro">
-      Hardware counterfeiting, supply chain compromise, and silicon-level attacks are
-      <strong>active threats across every major technology sector</strong>.
-      My research builds authentication primitives rooted in device physics —
-      applicable wherever a chip needs to prove it is genuine, unmodified, and trustworthy.
-    </p>
-    <div class="industry-grid">
 
-      <div class="ind-card ai">
-        <span class="ind-icon">🤖</span>
-        <div class="ind-hot">🔥 Highest demand right now</div>
-        <div class="ind-title">AI Chips — GPU / TPU / NPU</div>
-        <div class="ind-subtitle">NVIDIA · AMD · Intel · Google · Apple</div>
-        <p class="ind-desc">
-          NVIDIA H100 GPUs selling for <strong>$30–40K each</strong> are actively being
-          counterfeited due to export controls. AI accelerators with counterfeit or tampered
-          silicon can compromise model integrity and infrastructure security.
-          PUF-based authentication proves each chip is genuine — from the physics of how it was made.
-        </p>
-        <div class="ind-tags">
-          <span class="ind-tag">Chip Authentication</span>
-          <span class="ind-tag">Supply Chain Integrity</span>
-          <span class="ind-tag">Export Control Compliance</span>
-          <span class="ind-tag">AI Infrastructure Security</span>
-        </div>
-      </div>
-
-      <div class="ind-card cc">
-        <span class="ind-icon">🔐</span>
-        <div class="ind-hot">🔥 Active deployment</div>
-        <div class="ind-title">Confidential Computing</div>
-        <div class="ind-subtitle">Intel TDX · AMD SEV-SNP · NVIDIA H100 CC</div>
-        <p class="ind-desc">
-          Confidential computing isolates sensitive workloads at the hardware level —
-          but only if the chip can prove it hasn't been tampered with.
-          <strong>Hardware root-of-trust is the foundation</strong> every confidential
-          computing product is built on. My PUF research provides that foundation.
-        </p>
-        <div class="ind-tags">
-          <span class="ind-tag">Root of Trust</span>
-          <span class="ind-tag">Hardware Attestation</span>
-          <span class="ind-tag">Secure Enclave</span>
-          <span class="ind-tag">TEE</span>
-        </div>
-      </div>
-
-      <div class="ind-card auto">
-        <span class="ind-icon">🚗</span>
-        <div class="ind-title">Automotive Electronics</div>
-        <div class="ind-subtitle">NXP · Infineon · Qualcomm Automotive · Bosch</div>
-        <p class="ind-desc">
-          Every ECU, ADAS processor, and V2X module must be authenticated under
-          <strong>ISO/SAE 21434</strong> (vehicle cybersecurity standard).
-          Counterfeit automotive chips caused real-world failures during the chip shortage.
-          Physics-based PUFs provide tamper-evident identity at production time.
-        </p>
-        <div class="ind-tags">
-          <span class="ind-tag">ISO/SAE 21434</span>
-          <span class="ind-tag">ECU Authentication</span>
-          <span class="ind-tag">ADAS Security</span>
-          <span class="ind-tag">V2X</span>
-        </div>
-      </div>
-
-      <div class="ind-card iot">
-        <span class="ind-icon">📡</span>
-        <div class="ind-title">IoT &amp; Edge AI</div>
-        <div class="ind-subtitle">NXP · STMicro · Microchip · Arm</div>
-        <p class="ind-desc">
-          <strong>Billions of edge devices</strong> need unique, unforgeable identities
-          at manufacturing time — with no keys to store, manage, or leak.
-          The IFM-PUF generates authentication from existing CMOS inverters,
-          requiring no additional hardware area, making it ideal for cost-sensitive IoT silicon.
-        </p>
-        <div class="ind-tags">
-          <span class="ind-tag">Device Identity</span>
-          <span class="ind-tag">Zero-Key Storage</span>
-          <span class="ind-tag">Edge Security</span>
-          <span class="ind-tag">Scalable Authentication</span>
-        </div>
-      </div>
-
-      <div class="ind-card dc">
-        <span class="ind-icon">🏭</span>
-        <div class="ind-title">Data Centers &amp; Cloud</div>
-        <div class="ind-subtitle">AWS · Google · Microsoft Azure · Meta</div>
-        <p class="ind-desc">
-          Hyperscalers buying millions of server components need
-          <strong>hardware provenance verification</strong> — proof that what arrived
-          in the rack is what was ordered. Supply chain attacks using counterfeit
-          or backdoored components are a documented threat to cloud infrastructure.
-        </p>
-        <div class="ind-tags">
-          <span class="ind-tag">Hardware Provenance</span>
-          <span class="ind-tag">Server Authentication</span>
-          <span class="ind-tag">CXL / PCIe Security</span>
-          <span class="ind-tag">Supply Chain Trust</span>
-        </div>
-      </div>
-
-      <div class="ind-card semip">
-        <span class="ind-icon">⚙️</span>
-        <div class="ind-title">Semiconductor IP</div>
-        <div class="ind-subtitle">Synopsys · Arm · Rambus · Cadence</div>
-        <p class="ind-desc">
-          PUF IP is a <strong>$500M+ market growing 20% annually</strong>.
-          Synopsys acquired Intrinsic ID to bring PUF technology into DesignWare.
-          Arm PSA, Rambus CryptoManager, and Cadence security cores all need
-          next-generation PUF primitives — the exact architecture I've published and validated.
-        </p>
-        <div class="ind-tags">
-          <span class="ind-tag">PUF IP Licensing</span>
-          <span class="ind-tag">DesignWare Security</span>
-          <span class="ind-tag">Arm PSA / TrustZone</span>
-          <span class="ind-tag">SoC Integration</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
 
     /* ── SKILLS ── */
     .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
@@ -466,6 +342,7 @@
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#research">Research</a></li>
+      <li><a href="#industry">Industry</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#graph-section">Skills Map</a></li>
@@ -668,12 +545,179 @@
       <p>Developed a hardware framework using PUF-based root-of-trust primitives to detect <strong>faults and intrusion attempts in industrial control systems</strong>. Bridges silicon-level IC authentication with system-level operational monitoring — applicable to securing industrial infrastructure, embedded platforms, and AI inference hardware.</p>
     </div>
 
+    <!-- Research figure -->
+    <div style="margin: 1.75rem 0; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; text-align: center;">
+      <p style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent2); margin-bottom:0.85rem;">The Core Method — How IFM-PUF Works</p>
+      <img src="Fig2concept.png" alt="IFM-PUF concept: CMOS inverter transfer curve → Integral Function Method → THD/HD metrics as authentication fingerprint" style="max-width:100%; border-radius:8px; border:1px solid var(--border);">
+      <p style="font-size:0.78rem; color:var(--muted); margin-top:0.75rem; line-height:1.6;">CMOS inverter nonlinearity is extracted using the Integral Function Method (IFM). The resulting harmonic distortion metrics (THD, HD2, HD3, IMD3) form a device-specific fingerprint — unclonable because it originates from nanoscale physics of how each chip was fabricated.</p>
+    </div>
+
     <div class="review-box">
       <strong>Peer Reviewer</strong> — IEEE and ACM in IC hardware security, cryptographic engineering, VLSI design, and embedded systems. Presenting at two additional conferences in 2026.
+      &nbsp;·&nbsp; <a href="https://www.webofscience.com/wos/author/record/PQV-6777-2026" target="_blank" rel="noopener" style="color:var(--accent);">Web of Science · PQV-6777-2026</a>
     </div>
   </div>
 </section>
   
+
+<!-- INDUSTRY APPLICATIONS -->
+<section id="industry" class="alt-bg">
+  <div class="container">
+    <p class="section-eyebrow">Industry Relevance</p>
+    <h2 class="section-title">Where This Work Matters</h2>
+
+    <!-- Plain-English "How It Works" for non-technical visitors -->
+    <div style="margin-bottom:2.5rem;">
+      <p style="font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:1rem;">The idea in plain english</p>
+      <div style="display:flex; align-items:stretch; gap:0; flex-wrap:wrap; border:1px solid var(--border); border-radius:12px; overflow:hidden; background:var(--white);">
+        <div style="flex:1; min-width:160px; padding:1.25rem 1.5rem; border-right:1px solid var(--border); text-align:center;">
+          <div style="font-size:1.8rem; margin-bottom:0.5rem;">⚡</div>
+          <div style="font-weight:700; font-size:0.88rem; color:var(--text); margin-bottom:0.3rem;">Every chip is unique</div>
+          <div style="font-size:0.78rem; color:var(--muted); line-height:1.5;">Nanoscale manufacturing variation makes every silicon chip physically one-of-a-kind</div>
+        </div>
+        <div style="display:flex; align-items:center; padding:0 0.5rem; color:var(--border2); font-size:1.4rem; flex-shrink:0;">→</div>
+        <div style="flex:1; min-width:160px; padding:1.25rem 1.5rem; border-right:1px solid var(--border); text-align:center;">
+          <div style="font-size:1.8rem; margin-bottom:0.5rem;">🔬</div>
+          <div style="font-weight:700; font-size:0.88rem; color:var(--text); margin-bottom:0.3rem;">I measure the difference</div>
+          <div style="font-size:0.78rem; color:var(--muted); line-height:1.5;">My method extracts a subtle electrical signature — harmonic distortion — that's different for every chip</div>
+        </div>
+        <div style="display:flex; align-items:center; padding:0 0.5rem; color:var(--border2); font-size:1.4rem; flex-shrink:0;">→</div>
+        <div style="flex:1; min-width:160px; padding:1.25rem 1.5rem; border-right:1px solid var(--border); text-align:center;">
+          <div style="font-size:1.8rem; margin-bottom:0.5rem;">🔑</div>
+          <div style="font-weight:700; font-size:0.88rem; color:var(--text); margin-bottom:0.3rem;">That signature becomes an ID</div>
+          <div style="font-size:0.78rem; color:var(--muted); line-height:1.5;">No key to store, no secret to steal — the chip's identity lives in its physics</div>
+        </div>
+        <div style="display:flex; align-items:center; padding:0 0.5rem; color:var(--border2); font-size:1.4rem; flex-shrink:0;">→</div>
+        <div style="flex:1; min-width:160px; padding:1.25rem 1.5rem; text-align:center;">
+          <div style="font-size:1.8rem; margin-bottom:0.5rem;">✅</div>
+          <div style="font-weight:700; font-size:0.88rem; color:var(--text); margin-bottom:0.3rem;">Prove the chip is real</div>
+          <div style="font-size:0.78rem; color:var(--muted); line-height:1.5;">Any system can now verify a chip is genuine — not counterfeit, not tampered with, not cloned</div>
+        </div>
+      </div>
+      <p style="font-size:0.78rem; color:var(--muted); text-align:center; margin-top:0.75rem;">This is a Physically Unclonable Function (PUF) — the foundation of hardware-level trust that I research, publish, and validate on real silicon.</p>
+    </div>
+
+    <p class="industry-intro">
+      Hardware counterfeiting, supply chain compromise, and silicon-level attacks are
+      <strong>active threats across every major technology sector</strong>.
+      My research builds authentication primitives rooted in device physics —
+      applicable wherever a chip needs to prove it is genuine, unmodified, and trustworthy.
+    </p>
+    <div class="industry-grid">
+
+      <div class="ind-card ai">
+        <span class="ind-icon">🤖</span>
+        <div class="ind-hot">🔥 Highest demand right now</div>
+        <div class="ind-title">AI Chips — GPU / TPU / NPU</div>
+        <div class="ind-subtitle">NVIDIA · AMD · Intel · Google · Apple</div>
+        <p class="ind-desc">
+          NVIDIA H100 GPUs selling for <strong>$30–40K each</strong> are actively being
+          counterfeited due to export controls. AI accelerators with counterfeit or tampered
+          silicon can compromise model integrity and infrastructure security.
+          PUF-based authentication proves each chip is genuine — from the physics of how it was made.
+        </p>
+        <div class="ind-tags">
+          <span class="ind-tag">Chip Authentication</span>
+          <span class="ind-tag">Supply Chain Integrity</span>
+          <span class="ind-tag">Export Control Compliance</span>
+          <span class="ind-tag">AI Infrastructure Security</span>
+        </div>
+      </div>
+
+      <div class="ind-card cc">
+        <span class="ind-icon">🔐</span>
+        <div class="ind-hot">🔥 Active deployment</div>
+        <div class="ind-title">Confidential Computing</div>
+        <div class="ind-subtitle">Intel TDX · AMD SEV-SNP · NVIDIA H100 CC</div>
+        <p class="ind-desc">
+          Confidential computing isolates sensitive workloads at the hardware level —
+          but only if the chip can prove it hasn't been tampered with.
+          <strong>Hardware root-of-trust is the foundation</strong> every confidential
+          computing product is built on. My PUF research provides that foundation.
+        </p>
+        <div class="ind-tags">
+          <span class="ind-tag">Root of Trust</span>
+          <span class="ind-tag">Hardware Attestation</span>
+          <span class="ind-tag">Secure Enclave</span>
+          <span class="ind-tag">TEE</span>
+        </div>
+      </div>
+
+      <div class="ind-card auto">
+        <span class="ind-icon">🚗</span>
+        <div class="ind-title">Automotive Electronics</div>
+        <div class="ind-subtitle">NXP · Infineon · Qualcomm Automotive · Bosch</div>
+        <p class="ind-desc">
+          Every ECU, ADAS processor, and V2X module must be authenticated under
+          <strong>ISO/SAE 21434</strong> (vehicle cybersecurity standard).
+          Counterfeit automotive chips caused real-world failures during the chip shortage.
+          Physics-based PUFs provide tamper-evident identity at production time.
+        </p>
+        <div class="ind-tags">
+          <span class="ind-tag">ISO/SAE 21434</span>
+          <span class="ind-tag">ECU Authentication</span>
+          <span class="ind-tag">ADAS Security</span>
+          <span class="ind-tag">V2X</span>
+        </div>
+      </div>
+
+      <div class="ind-card iot">
+        <span class="ind-icon">📡</span>
+        <div class="ind-title">IoT &amp; Edge AI</div>
+        <div class="ind-subtitle">NXP · STMicro · Microchip · Arm</div>
+        <p class="ind-desc">
+          <strong>Billions of edge devices</strong> need unique, unforgeable identities
+          at manufacturing time — with no keys to store, manage, or leak.
+          The IFM-PUF generates authentication from existing CMOS inverters,
+          requiring no additional hardware area, making it ideal for cost-sensitive IoT silicon.
+        </p>
+        <div class="ind-tags">
+          <span class="ind-tag">Device Identity</span>
+          <span class="ind-tag">Zero-Key Storage</span>
+          <span class="ind-tag">Edge Security</span>
+          <span class="ind-tag">Scalable Authentication</span>
+        </div>
+      </div>
+
+      <div class="ind-card dc">
+        <span class="ind-icon">🏭</span>
+        <div class="ind-title">Data Centers &amp; Cloud</div>
+        <div class="ind-subtitle">AWS · Google · Microsoft Azure · Meta</div>
+        <p class="ind-desc">
+          Hyperscalers buying millions of server components need
+          <strong>hardware provenance verification</strong> — proof that what arrived
+          in the rack is what was ordered. Supply chain attacks using counterfeit
+          or backdoored components are a documented threat to cloud infrastructure.
+        </p>
+        <div class="ind-tags">
+          <span class="ind-tag">Hardware Provenance</span>
+          <span class="ind-tag">Server Authentication</span>
+          <span class="ind-tag">CXL / PCIe Security</span>
+          <span class="ind-tag">Supply Chain Trust</span>
+        </div>
+      </div>
+
+      <div class="ind-card semip">
+        <span class="ind-icon">⚙️</span>
+        <div class="ind-title">Semiconductor IP</div>
+        <div class="ind-subtitle">Synopsys · Arm · Rambus · Cadence</div>
+        <p class="ind-desc">
+          PUF IP is a <strong>$500M+ market growing 20% annually</strong>.
+          Synopsys (via Intrinsic ID acquisition) and Rambus CryptoManager lead this market —
+          built on exactly the PUF architecture I've published and validated on real silicon.
+        </p>
+        <div class="ind-tags">
+          <span class="ind-tag">PUF IP Licensing</span>
+          <span class="ind-tag">DesignWare Security</span>
+          <span class="ind-tag">Arm PSA / TrustZone</span>
+          <span class="ind-tag">SoC Integration</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- SKILLS -->
 <section id="skills" class="alt-bg">
   <div class="container">
@@ -908,6 +952,31 @@
       <div class="svc-card">
         <div class="svc-title">Judge — Girls in STEM Hackathon</div>
         <div class="svc-desc">Judged student projects at a Girls in STEM Hackathon, evaluating technical innovation, feasibility, and presentation.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CONFERENCE PHOTOS -->
+<section id="photos" style="padding-top:0; padding-bottom:80px;">
+  <div class="container">
+    <p class="section-eyebrow">In the Field</p>
+    <h2 class="section-title">Beyond the Paper</h2>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:1.25rem;">
+      <div style="border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--white);">
+        <img src="MWSCAS2025_AakritiB.jpg" alt="Aakriti Barat at IEEE MWSCAS 2025 with co-researchers" style="width:100%; height:260px; object-fit:cover; display:block;">
+        <div style="padding:1rem 1.25rem;">
+          <div style="font-weight:700; font-size:0.875rem; color:var(--text); margin-bottom:0.2rem;">IEEE MWSCAS 2025</div>
+          <div style="font-size:0.78rem; color:var(--muted); line-height:1.6;">Presenting two first-author papers on PUF design and current transient spectroscopy. One of two conferences where I'll present in 2026 as well.</div>
+        </div>
+      </div>
+      <div style="border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--white);">
+        <img src="OhioStateScienceDay_AakritiB.jpeg" alt="Aakriti Barat judging at Ohio State Science Day" style="width:100%; height:260px; object-fit:cover; object-position:center top; display:block;">
+        <div style="padding:1rem 1.25rem;">
+          <div style="font-weight:700; font-size:0.875rem; color:var(--text); margin-bottom:0.2rem;">Ohio State Science Day — Judge</div>
+          <div style="font-size:0.78rem; color:var(--muted); line-height:1.6;">Evaluating student engineering and science projects across hundreds of participants. Part of my commitment to mentoring the next generation of STEM talent.</div>
+        </div>
       </div>
     </div>
   </div>
